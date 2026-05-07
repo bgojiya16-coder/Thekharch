@@ -6,7 +6,6 @@
 <title>Kharch — Personal Finance</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --bg:#08090d;--s1:#0e0f15;--s2:#14151d;--s3:#1c1d28;--s4:#252636;
@@ -430,9 +429,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .login-lang{position:absolute;top:18px;right:20px;z-index:3;}
 
 /* ── LOGIN TABS ── */
-.login-tabs{display:flex;gap:0;margin-bottom:22px;background:var(--s3);border-radius:12px;padding:3px;}
-.login-tab{flex:1;padding:9px;border:none;background:none;color:var(--muted);font-family:var(--sans);font-size:12px;font-weight:700;border-radius:9px;cursor:pointer;transition:all 0.18s;}
-.login-tab.active{background:var(--s1);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.35);}
+
 
 /* user code display */
 .ucode-box{
@@ -533,34 +530,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="login-card">
       <div class="login-card-title" data-i18n="login_title">Welcome 👋</div>
 
-      <!-- Tabs: New Account | Use Code -->
-      <div class="login-tabs">
-        <button class="login-tab active" id="ltab-new" onclick="switchLoginTab('new')" data-i18n="ltab_new">New / Sign In</button>
-        <button class="login-tab" id="ltab-code" onclick="switchLoginTab('code')" data-i18n="ltab_code">🔑 Use Code</button>
-      </div>
-
-      <!-- ── TAB: New / Sign In ── -->
       <div id="tab-new">
-        <div class="login-card-sub" data-i18n="login_sub">Enter your details below. We'll send your unique access code to your email so you can log in from any device.</div>
+        <div class="login-card-sub" data-i18n="login_sub">Enter your first name to access your personal finance dashboard.</div>
         <div class="login-field">
           <label data-i18n="login_fname">First Name *</label>
           <div class="login-input-wrap">
             <span class="l-icon">👤</span>
-            <input type="text" id="login-fname" data-i18n-placeholder="login_fname_ph" placeholder="e.g. Ravi" maxlength="20">
-          </div>
-        </div>
-        <div class="login-field" style="margin-top:12px">
-          <label data-i18n="login_phone">Mobile Number *</label>
-          <div class="login-input-wrap">
-            <span class="l-icon">📱</span>
-            <input type="tel" id="login-phone" data-i18n-placeholder="login_phone_ph" placeholder="e.g. 9876543210" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')">
-          </div>
-        </div>
-        <div class="login-field" style="margin-top:12px">
-          <label data-i18n="login_email">Email Address *</label>
-          <div class="login-input-wrap">
-            <span class="l-icon">✉️</span>
-            <input type="email" id="login-email" data-i18n-placeholder="login_email_ph" placeholder="e.g. ravi@gmail.com" maxlength="80" onkeydown="if(event.key==='Enter')doLogin()">
+            <input type="text" id="login-fname" data-i18n-placeholder="login_fname_ph" placeholder="e.g. Ravi" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
           </div>
         </div>
         <button class="login-btn" onclick="doLogin()" style="margin-top:18px" id="login-submit-btn">
@@ -574,19 +550,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         </div>
       </div>
 
-      <!-- ── TAB: Use Code ── -->
-      <div id="tab-code" style="display:none">
-        <div class="login-card-sub" data-i18n="code_sub">Enter your 8-character access code to restore your data on this device.</div>
-        <div class="login-field" style="margin-top:16px">
-          <label data-i18n="code_label">Your Access Code</label>
-          <div class="login-input-wrap code-input-wrap">
-            <span class="l-icon">🔑</span>
-            <input type="text" id="login-code" placeholder="e.g. RAVI-A3F7" maxlength="12" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')doLoginWithCode()">
-          </div>
-        </div>
-        <button class="login-btn" onclick="doLoginWithCode()" style="margin-top:18px"><span data-i18n="code_btn">Access My Data</span> <span>→</span></button>
-        <div class="login-card-sub" style="margin-top:12px;font-size:11px;opacity:0.7" data-i18n="code_hint">💡 Your code was shown after you first signed in. Check the app on your original device.</div>
-      </div>
     </div>
     <div class="login-note" data-i18n="login_note">🔒 Data stored locally in your browser &nbsp;·&nbsp; No signup required</div>
   </div>
@@ -983,7 +946,7 @@ const LANG = {
     login_title:'Welcome 👋',
     login_email:'Email Address *',
     login_email_ph:'e.g. ravi@gmail.com',
-    login_sub:'Enter your details below. We\'ll send your unique access code to your email so you can log in from any device.',
+    login_sub:'Enter your first name to access your personal finance dashboard.',
     login_label:'Your Full Name',
     login_fname:'First Name *',
     login_fname_ph:'e.g. Ravi',
@@ -993,8 +956,6 @@ const LANG = {
     login_btn:'Enter Dashboard',
     login_switch:'or switch account',
     login_note:'🔒 Data stored locally in your browser · No signup required',
-    ltab_new:'New / Sign In',
-    ltab_code:'🔑 Use Code',
     code_sub:'Enter your 8-character access code to restore your data on this device.',
     code_label:'Your Access Code',
     code_btn:'Access My Data',
@@ -1124,8 +1085,6 @@ const LANG = {
     login_btn:'ડૅશબોર્ડ ખોલો',
     login_switch:'અથવા એકાઉન્ટ બદલો',
     login_note:'🔒 ડેટા તમારા બ્રાઉઝરમાં સ્ટોર છે · સાઇનઅપ જરૂરી નથી',
-    ltab_new:'નવું / સાઇન ઇન',
-    ltab_code:'🔑 કોડ વાપરો',
     code_sub:'તમારો 8-અક્ષરનો એક્સેસ કોડ દાખલ કરો.',
     code_label:'તમારો એક્સેસ કોડ',
     code_btn:'મારો ડેટા ખોલો',
@@ -1335,7 +1294,7 @@ function nextTip(){showTip(tipIdx+1);}
 function prevTip(){showTip(tipIdx-1);}
 
 // ══════════════════════════════════════════
-// LOGIN — First Name + Phone → User Code
+// LOGIN — First Name → User Code
 // ══════════════════════════════════════════
 function getUsers(){return JSON.parse(localStorage.getItem('kharch_users')||'[]');}
 function saveUsers(u){localStorage.setItem('kharch_users',JSON.stringify(u));}
@@ -1344,21 +1303,15 @@ function skey(code,t){return`kharch_${code}_${t}`;}
 /** Generate a deterministic 8-char code from first name + phone
  *  Format: RAVI-A3F7  (first 4 chars of name + dash + 4 hex chars from phone hash)
  */
-function generateCode(firstName, phone){
+function generateCode(firstName){
   const name = firstName.trim().toUpperCase().replace(/[^A-Z]/g,'').substring(0,4).padEnd(4,'X');
-  // Simple hash of phone digits → 4 hex chars
-  let hash = 0;
-  for(let i=0;i<phone.length;i++) hash = ((hash<<5)-hash) + phone.charCodeAt(i) | 0;
+  // Random 4 hex chars seeded by name + timestamp
+  let hash = Date.now();
+  for(let i=0;i<name.length;i++) hash = ((hash<<5)-hash) + name.charCodeAt(i) | 0;
   const hex = Math.abs(hash).toString(16).toUpperCase().padStart(4,'0').substring(0,4);
   return `${name}-${hex}`;
 }
 
-function switchLoginTab(tab){
-  document.getElementById('tab-new').style.display = tab==='new'?'block':'none';
-  document.getElementById('tab-code').style.display = tab==='code'?'block':'none';
-  document.getElementById('ltab-new').classList.toggle('active', tab==='new');
-  document.getElementById('ltab-code').classList.toggle('active', tab==='code');
-}
 
 function renderPrev(){
   const users = getUsers();
@@ -1371,26 +1324,13 @@ function renderPrev(){
 
 function doLogin(){
   const fname = (document.getElementById('login-fname').value||'').trim();
-  const phone = (document.getElementById('login-phone').value||'').trim();
-  const email = (document.getElementById('login-email').value||'').trim().toLowerCase();
   if(!fname || fname.length < 2){showToast('⚠️ Enter your first name (min 2 chars)','warn');return;}
-  if(!phone || phone.length < 10){showToast('⚠️ Enter a valid 10-digit mobile number','warn');return;}
-  if(!email || !email.includes('@') || !email.includes('.')){showToast('⚠️ Enter a valid email address','warn');return;}
-  const code = generateCode(fname, phone);
+  const code = generateCode(fname);
   const users = getUsers();
   const isNew = !users.find(u=>u.code===code);
-  loginAs(code, fname, email, isNew);
+  loginAs(code, fname, '', isNew);
 }
 
-function doLoginWithCode(){
-  const raw = (document.getElementById('login-code').value||'').trim().toUpperCase();
-  if(raw.length < 5){showToast('⚠️ Enter your access code','warn');return;}
-  const users = getUsers();
-  const found = users.find(u=>u.code===raw);
-  const displayName = found ? found.displayName : raw.split('-')[0];
-  const email = found ? (found.email||'') : '';
-  loginAs(raw, displayName, email, false, true);
-}
 
 function quickLogin(code, displayName){
   loginAs(code, displayName, '', false);
@@ -1439,9 +1379,6 @@ function loginAs(code, displayName, email='', isNew=false, fromCode=false){
   renderEmis();
   render();
 
-  // Send emails via EmailJS
-  sendEmails(displayName, userEmail, code, sinceStr, isNew);
-
   // Show code modal only for brand-new users
   if(isNew){
     document.getElementById('modal-code-val').textContent = code;
@@ -1482,264 +1419,6 @@ function showMyCode(){
 }
 
 
-// ══════════════════════════════════════════
-// EMAIL — EmailJS SDK (proper implementation)
-// Bhavin needs to complete 3-step setup below
-// ══════════════════════════════════════════
-
-// ┌─────────────────────────────────────────┐
-// │  STEP 1: Go to https://emailjs.com      │
-// │  STEP 2: Create account with            │
-// │          contact.becreatif@gmail.com    │
-// │  STEP 3: Add Gmail service → copy       │
-// │          Service ID here ↓              │
-// │  STEP 4: Create template (instructions  │
-// │          in code below) → copy IDs here │
-// └─────────────────────────────────────────┘
-const EJS_PUBLIC_KEY    = 'YOUR_PUBLIC_KEY';       // Dashboard → Account → Public Key
-const EJS_SERVICE_ID    = 'YOUR_SERVICE_ID';        // Email Services → Service ID
-const EJS_TPL_WELCOME   = 'YOUR_WELCOME_TPL_ID';   // Email Templates → Template ID (welcome)
-const EJS_TPL_ADMIN     = 'YOUR_ADMIN_TPL_ID';     // Email Templates → Template ID (admin)
-
-/*
- ═══════════════════════════════════════════════════
-  HOW TO SET UP EMAILJS (5 minutes, free forever)
- ═══════════════════════════════════════════════════
-
- 1. Go to https://emailjs.com → Sign Up (free)
-    Use: contact.becreatif@gmail.com
-
- 2. ADD EMAIL SERVICE:
-    → Email Services → Add New Service → Gmail
-    → Connect your Gmail account
-    → Copy the Service ID  (e.g. service_abc123)
-    → Paste into EJS_SERVICE_ID above
-
- 3. CREATE WELCOME TEMPLATE:
-    → Email Templates → Create New Template
-    → Subject: 🎉 Welcome to Kharch, {{to_name}}! Your Code: {{user_code}}
-    → To Email: {{to_email}}
-    → Body: (paste any HTML or use {{message_html}})
-    → Save → Copy Template ID → paste into EJS_TPL_WELCOME
-
- 4. CREATE ADMIN TEMPLATE:
-    → Email Templates → Create New Template
-    → Subject: [Kharch] {{is_new}} — {{user_name}}
-    → To Email: contact.becreatif@gmail.com
-    → Body: {{message_html}}
-    → Save → Copy Template ID → paste into EJS_TPL_ADMIN
-
- 5. GET PUBLIC KEY:
-    → Account → General → Public Key
-    → Paste into EJS_PUBLIC_KEY above
-
- 6. SAVE FILE — emails will now send automatically!
-
- ═══════════════════════════════════════════════════
-*/
-
-let _ejsInited = false;
-function initEJS(){
-  if(_ejsInited) return;
-  if(typeof emailjs === 'undefined'){ console.warn('EmailJS SDK not loaded'); return; }
-  emailjs.init(EJS_PUBLIC_KEY);
-  _ejsInited = true;
-}
-
-function isEJSConfigured(){
-  return EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY' &&
-         EJS_SERVICE_ID !== 'YOUR_SERVICE_ID' &&
-         EJS_TPL_WELCOME !== 'YOUR_WELCOME_TPL_ID' &&
-         EJS_TPL_ADMIN   !== 'YOUR_ADMIN_TPL_ID';
-}
-
-function buildWelcomeEmail(name, code){
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f4f4f8;font-family:'Segoe UI',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f8;padding:30px 10px">
- <tr><td align="center">
-  <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:18px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.12)">
-
-   <!-- HEADER -->
-   <tr><td style="background:#08090d;padding:36px 40px;text-align:center;border-bottom:3px solid #e8ff5a">
-     <div style="font-size:44px;line-height:1;margin-bottom:8px">₹</div>
-     <div style="font-size:30px;font-weight:900;color:#eeeef2;letter-spacing:-1px;font-family:Georgia,serif">Kharch</div>
-     <div style="font-size:11px;color:#5a5b70;margin-top:5px;letter-spacing:3px;text-transform:uppercase">Personal Finance Tracker</div>
-   </td></tr>
-
-   <!-- HERO -->
-   <tr><td style="background:#0e0f15;padding:36px 40px 28px">
-     <p style="font-size:24px;font-weight:800;color:#eeeef2;margin:0 0 8px">Hey ${name}! 👋</p>
-     <p style="font-size:14px;color:#8888a0;line-height:1.8;margin:0 0 28px">Welcome to <strong style="color:#e8ff5a">Kharch</strong> — your personal finance tracker built for India. You are now ready to track every rupee, every day.</p>
-
-     <!-- CODE BOX -->
-     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px">
-      <tr><td style="background:#1c1d28;border:2px dashed #e8ff5a;border-radius:16px;padding:28px;text-align:center">
-        <p style="font-size:11px;color:#5a5b70;text-transform:uppercase;letter-spacing:3px;margin:0 0 12px;font-family:'Courier New',monospace">Your Unique Access Code</p>
-        <p style="font-size:36px;font-weight:900;color:#e8ff5a;letter-spacing:8px;font-family:'Courier New',monospace;margin:0 0 14px;word-break:break-all">${code}</p>
-        <p style="font-size:12px;color:#8888a0;margin:0;line-height:1.7">Use this code on the <strong style="color:#eeeef2">🔑 Use Code</strong> tab on the login screen to access your data from <strong style="color:#eeeef2">any browser or device.</strong><br>Keep this code safe — treat it like a password.</p>
-      </td></tr>
-     </table>
-
-     <!-- FEATURES TITLE -->
-     <p style="font-size:11px;font-weight:800;color:#5a5b70;text-transform:uppercase;letter-spacing:2px;margin:0 0 18px">✨ Everything Kharch Can Do For You</p>
-
-     <!-- FEATURE LIST -->
-     ${[
-       ['📊','Dashboard & Analytics','See your income, expenses and savings at a glance with beautiful interactive charts. Filter by month, category or payment method.'],
-       ['🏦','EMI Tracker','Add all your loan EMIs with due dates. Get colour-coded reminders — Overdue, Due Today, Due Soon. Track payoff progress with a visual bar.'],
-       ['💡','Daily Finance Tips','A fresh money tip every single day — covering budgeting, investing, savings habits, and wealth-building for Indian families.'],
-       ['📈','Investment Ideas','Curated investment options for Indian investors — Index Funds, PPF, ELSS, Sovereign Gold Bonds, REITs, NPS — each with risk ratings.'],
-       ['📄','PDF Reports','Export a beautiful monthly PDF report with transaction history, category breakdown, and payment method summary — shareable in one tap.'],
-       ['🔑','Multi-Device Access','Use your unique code to log in from any phone, laptop, or browser. Your full data history loads instantly — no account needed.'],
-       ['🇬🇧 🇮🇳','English & Gujarati','Full bilingual support — switch between English and Gujarati instantly from anywhere in the app.'],
-     ].map(([ico,title,desc])=>`
-     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px">
-      <tr>
-       <td width="52" valign="top">
-         <div style="width:44px;height:44px;background:#1c1d28;border-radius:12px;text-align:center;font-size:22px;line-height:44px">${ico}</div>
-       </td>
-       <td valign="top" style="padding-left:14px">
-         <p style="font-size:13px;font-weight:700;color:#eeeef2;margin:0 0 4px">${title}</p>
-         <p style="font-size:12px;color:#5a5b70;margin:0;line-height:1.65">${desc}</p>
-       </td>
-      </tr>
-     </table>`).join('')}
-
-     <!-- HOW TO USE ON ANOTHER DEVICE -->
-     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;margin-bottom:8px">
-      <tr><td style="background:#14151d;border:1px solid #252636;border-radius:14px;padding:22px 24px">
-        <p style="font-size:12px;font-weight:700;color:#eeeef2;margin:0 0 14px">📱 How to Open Kharch on a New Device</p>
-        ${[
-          'Open the Kharch app in any browser on your new device',
-          'Click the <strong style="color:#e8ff5a">🔑 Use Code</strong> tab on the login screen',
-          `Enter your code: <strong style="color:#e8ff5a;font-family:'Courier New',monospace;letter-spacing:2px">${code}</strong>`,
-          'Tap "Access My Data" — your entire history is restored instantly'
-        ].map((step,i)=>`
-        <div style="display:flex;align-items:flex-start;margin-bottom:10px">
-          <span style="min-width:20px;height:20px;background:#e8ff5a;color:#08090d;border-radius:50%;text-align:center;line-height:20px;font-size:11px;font-weight:800;margin-right:12px;flex-shrink:0;display:inline-block">${i+1}</span>
-          <span style="font-size:12px;color:#8888a0;line-height:1.65">${step}</span>
-        </div>`).join('')}
-      </td></tr>
-     </table>
-
-     <p style="font-size:13px;color:#8888a0;line-height:1.8;margin:24px 0 0">Happy tracking! Every rupee saved today brings you closer to your goals tomorrow. 🎯</p>
-   </td></tr>
-
-   <!-- FOOTER -->
-   <tr><td style="background:#0a0b10;padding:28px 40px;text-align:center;border-top:1px solid #1c1d28">
-     <p style="font-size:18px;font-weight:900;color:#e8ff5a;margin:0 0 4px;font-family:Georgia,serif">₹ Kharch</p>
-     <p style="font-size:11px;color:#5a5b70;margin:0 0 16px">Personal Finance Tracker for India</p>
-     <p style="font-size:12px;color:#383848;margin:0;line-height:2">
-       Built with ❤️ by <strong style="color:#8888a0">Bhavin Gojiya</strong><br>
-       <span style="color:#2d2d40">Founder &amp; Developer — Kharch App</span><br>
-       <span style="color:#2d2d40">contact.becreatif@gmail.com</span>
-     </p>
-     <p style="font-size:10px;color:#252636;margin:14px 0 0;line-height:1.6">This email was sent because you registered on Kharch.<br>Your financial data is stored only on your own device — we never store it on our servers.</p>
-   </td></tr>
-
-  </table>
- </td></tr>
-</table>
-</body></html>`;
-}
-
-function buildAdminEmail(name, userEmail, code, isNew){
-  const badge = isNew ? '🆕 NEW USER' : '🔄 RETURNING LOGIN';
-  const badgeColor = isNew ? '#1a4a1a' : '#1a1a4a';
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:20px;background:#f0f0f0;font-family:Arial,sans-serif;">
-<table width="560" style="max-width:560px;width:100%;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #ddd;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
- <tr><td style="background:${badgeColor};padding:20px 28px">
-   <p style="color:#fff;font-size:18px;font-weight:700;margin:0">${badge}</p>
-   <p style="color:#aaa;font-size:12px;margin:5px 0 0">Kharch App · ${new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}</p>
- </td></tr>
- <tr><td style="padding:24px 28px">
-   <table width="100%" cellpadding="0" cellspacing="0">
-     <tr><td style="padding:6px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Name</span><strong style="font-size:13px;color:#111">${name}</strong></td></tr>
-     <tr><td style="padding:6px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Email</span><span style="font-size:13px;color:#111">${userEmail||'<em style="color:#aaa">Not provided</em>'}</span></td></tr>
-     <tr><td style="padding:10px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Access Code</span><strong style="font-size:18px;color:#b07000;font-family:'Courier New',monospace;letter-spacing:3px">${code}</strong></td></tr>
-     <tr><td style="padding:6px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Status</span><span style="font-size:12px;color:${isNew?'#1a6a1a':'#1a1a6a'};font-weight:700">${isNew?'✅ New Registration':'↩️ Returning Login'}</span></td></tr>
-     <tr><td style="padding:6px 0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Device</span><span style="font-size:10px;color:#888">${navigator.userAgent.substring(0,120)}</span></td></tr>
-   </table>
- </td></tr>
- <tr><td style="background:#f8f8f8;padding:14px 28px;border-top:1px solid #eee">
-   <p style="font-size:11px;color:#aaa;margin:0">Kharch App · Founder: Bhavin Gojiya · contact.becreatif@gmail.com</p>
- </td></tr>
-</table>
-</body></html>`;
-}
-
-async function sendEmails(name, userEmail, code, since, isNew){
-  // Show warning in console if not configured, but don't block the app
-  if(!isEJSConfigured()){
-    console.warn(
-      '%c[Kharch Email] EmailJS not configured yet.\n' +
-      'Edit the EJS_PUBLIC_KEY, EJS_SERVICE_ID, EJS_TPL_WELCOME, EJS_TPL_ADMIN\n' +
-      'constants in the script. See setup instructions in the code comments.',
-      'color:#e8a000;font-size:12px'
-    );
-    return;
-  }
-
-  initEJS();
-
-  const params_welcome = {
-    to_email:     userEmail,
-    to_name:      name,
-    user_code:    code,
-    member_since: since,
-    message_html: buildWelcomeEmail(name, code),
-    subject:      `Welcome to Kharch, ${name}! Your Access Code: ${code}`,
-  };
-
-  const params_admin = {
-    to_email:     'contact.becreatif@gmail.com',
-    to_name:      'Bhavin Gojiya',
-    user_name:    name,
-    user_email:   userEmail || 'Not provided',
-    user_code:    code,
-    is_new:       isNew ? 'YES — New Registration' : 'No — Returning Login',
-    login_time:   new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),
-    message_html: buildAdminEmail(name, userEmail, code, isNew),
-  };
-
-  try{
-    // 1) Welcome email → user (only on first signup)
-    if(userEmail && isNew){
-      const r1 = await emailjs.send(EJS_SERVICE_ID, EJS_TPL_WELCOME, params_welcome);
-      console.log('%c[Kharch] ✅ Welcome email sent to ' + userEmail, 'color:green');
-    }
-    // 2) Admin notification → contact.becreatif@gmail.com (always)
-    const r2 = await emailjs.send(EJS_SERVICE_ID, EJS_TPL_ADMIN, params_admin);
-    console.log('%c[Kharch] ✅ Admin notification sent', 'color:green');
-  } catch(err){
-    console.error('[Kharch] ❌ Email error:', err);
-  }
-}
-
-// ── TEST EMAIL (call testEmail() in browser console to verify) ──
-async function testEmail(){
-  if(!isEJSConfigured()){ alert('⚠️ EmailJS not configured yet.\nSee the EJS_* constants at the top of the script.'); return; }
-  initEJS();
-  try{
-    await emailjs.send(EJS_SERVICE_ID, EJS_TPL_ADMIN, {
-      to_email:     'contact.becreatif@gmail.com',
-      to_name:      'Bhavin Gojiya',
-      user_name:    'TEST USER',
-      user_email:   'test@test.com',
-      user_code:    'TEST-0000',
-      is_new:       'YES — Test Submission',
-      login_time:   new Date().toLocaleString('en-IN'),
-      message_html: '<h2>✅ Test email from Kharch App working!</h2><p>EmailJS is configured correctly.</p>',
-    });
-    alert('✅ Test email sent! Check contact.becreatif@gmail.com inbox.');
-  } catch(e){
-    alert('❌ Test failed: ' + JSON.stringify(e));
-  }
-}
-
-
 
 function doLogout(){
   currentUser=null;entries=[];drafts=[];emis=[];
@@ -1748,10 +1427,6 @@ function doLogout(){
   document.getElementById('app-footer').style.display='none';
   document.getElementById('mob-nav').style.display='none';
   if(document.getElementById('login-fname')) document.getElementById('login-fname').value='';
-  if(document.getElementById('login-phone')) document.getElementById('login-phone').value='';
-  if(document.getElementById('login-email')) document.getElementById('login-email').value='';
-  if(document.getElementById('login-code')) document.getElementById('login-code').value='';
-  switchLoginTab('new');
   renderPrev();
   if(barChart){barChart.destroy();barChart=null;}
   if(donutChart){donutChart.destroy();donutChart=null;}
