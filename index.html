@@ -397,8 +397,119 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .app-footer-text .footer-brand{color:var(--accent);font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:-0.3px;}
 .app-footer-text .footer-heart{color:var(--red);}
 
-@media(max-width:900px){#app-screen.visible{grid-template-columns:1fr;}.sidebar{display:none;}.metrics{grid-template-columns:repeat(2,1fr);}.grid-3,.inv-grid{grid-template-columns:1fr;}.tips-grid{grid-template-columns:1fr;}.emi-grid{grid-template-columns:1fr;}.emi-hero{flex-direction:column;align-items:flex-start;}.emi-summary{flex-wrap:wrap;}}
-@media(max-width:600px){.page{padding:14px;}.metrics{grid-template-columns:1fr 1fr;}.topbar{flex-direction:column;align-items:flex-start;gap:10px;}.topbar-right{width:100%;overflow-x:auto;}}
+@media(max-width:900px){
+  #app-screen.visible{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .grid-3,.inv-grid{grid-template-columns:1fr;}
+  .tips-grid{grid-template-columns:1fr;}
+  .emi-grid{grid-template-columns:1fr;}
+  .emi-hero{flex-direction:column;align-items:flex-start;}
+  .emi-summary{flex-wrap:wrap;}
+  .main{padding-bottom:70px;} /* space for bottom nav */
+  .app-footer{margin-bottom:70px;}
+}
+
+/* ── LANGUAGE TOGGLE ── */
+.lang-toggle{
+  display:flex;align-items:center;gap:3px;
+  background:var(--s3);border:1px solid var(--border);
+  border-radius:20px;padding:3px;
+  flex-shrink:0;
+}
+.lang-btn{
+  padding:4px 11px;border-radius:16px;border:none;cursor:pointer;
+  font-family:var(--sans);font-size:11px;font-weight:700;
+  background:none;color:var(--muted);transition:all 0.18s;
+  line-height:1.3;
+}
+.lang-btn.active{background:var(--accent);color:#08090d;}
+.lang-btn:not(.active):hover{color:var(--text);}
+
+/* login lang toggle */
+.login-lang{position:absolute;top:18px;right:20px;z-index:3;}
+
+/* ── LOGIN TABS ── */
+.login-tabs{display:flex;gap:0;margin-bottom:22px;background:var(--s3);border-radius:12px;padding:3px;}
+.login-tab{flex:1;padding:9px;border:none;background:none;color:var(--muted);font-family:var(--sans);font-size:12px;font-weight:700;border-radius:9px;cursor:pointer;transition:all 0.18s;}
+.login-tab.active{background:var(--s1);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.35);}
+
+/* user code display */
+.ucode-box{
+  background:var(--s3);border:1.5px dashed var(--accent);border-radius:14px;
+  padding:18px 20px;text-align:center;margin-top:18px;
+}
+.ucode-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:8px;}
+.ucode-val{
+  font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);
+  letter-spacing:4px;margin-bottom:12px;word-break:break-all;
+}
+.ucode-actions{display:flex;gap:8px;justify-content:center;}
+.ucode-btn{
+  padding:8px 16px;border-radius:9px;border:1px solid var(--border2);
+  background:var(--s4);color:var(--text);font-family:var(--sans);font-size:11px;
+  font-weight:700;cursor:pointer;transition:all 0.15s;
+}
+.ucode-btn:hover{background:var(--accent);color:#08090d;border-color:var(--accent);}
+.ucode-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.6;}
+
+/* code input tab */
+.code-input-wrap{position:relative;}
+.code-input-wrap input{text-transform:uppercase;letter-spacing:3px;font-family:var(--mono);font-size:18px;font-weight:700;text-align:center;}
+
+.mob-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--s1);
+  border-top:1px solid var(--border2);
+  z-index:500;
+  padding:0 4px env(safe-area-inset-bottom,0px);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.mob-nav-inner{
+  display:flex;align-items:stretch;
+  height:60px;
+  gap:2px;
+}
+.mob-nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;padding:6px 4px;
+  color:var(--muted);font-size:9px;font-weight:700;
+  letter-spacing:0.04em;text-transform:uppercase;
+  border:none;background:none;
+  border-radius:10px;
+  transition:all 0.15s;
+  font-family:var(--sans);
+}
+.mob-nav-item .mn-ico{font-size:20px;line-height:1;}
+.mob-nav-item:hover,.mob-nav-item.active{color:var(--accent);}
+.mob-nav-item.active .mn-ico{filter:drop-shadow(0 0 6px rgba(232,255,90,0.5));}
+
+/* Centre FAB — split add button */
+.mob-fab-wrap{
+  flex:0 0 auto;width:130px;
+  display:flex;align-items:center;justify-content:center;
+  padding:8px 4px;gap:5px;
+}
+.mob-fab{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  height:44px;border-radius:12px;
+  border:none;cursor:pointer;font-family:var(--sans);font-size:9px;font-weight:800;
+  letter-spacing:0.03em;text-transform:uppercase;transition:all 0.2s;
+}
+.mob-fab.fab-entry{background:var(--accent);color:#08090d;}
+.mob-fab.fab-emi{background:rgba(255,79,109,0.15);color:var(--red);border:1px solid rgba(255,79,109,0.35);}
+.mob-fab .fab-ico{font-size:16px;line-height:1;}
+.mob-fab:active{transform:scale(0.93);}
+
+@media(max-width:900px){.mob-nav{display:block;}}
+@media(max-width:600px){
+  .page{padding:14px;}
+  .metrics{grid-template-columns:1fr 1fr;}
+  .topbar{flex-direction:column;align-items:flex-start;gap:10px;}
+  .topbar-right{width:100%;overflow-x:auto;}
+}
 </style>
 </head>
 <body>
@@ -407,28 +518,77 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <div id="login-screen">
   <div class="login-bg-grid"></div>
   <div class="login-glow"></div>
+  <!-- Lang toggle on login -->
+  <div class="login-lang">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="ll-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="ll-gu" onclick="setLang('gu')">ગુજ</button>
+    </div>
+  </div>
   <div class="login-wrap">
     <div class="login-logo-row">
       <div class="login-logo">₹ <em>Kharch</em></div>
       <div class="login-tagline">Personal Finance Tracker</div>
     </div>
     <div class="login-card">
-      <div class="login-card-title">Welcome 👋</div>
-      <div class="login-card-sub">Enter your name to access your personal finance dashboard. All data is saved locally on your device — no password needed.</div>
-      <div class="login-field">
-        <label>Your Full Name</label>
-        <div class="login-input-wrap">
-          <span class="l-icon">👤</span>
-          <input type="text" id="login-name" placeholder="e.g. Ravi Sharma" maxlength="40" onkeydown="if(event.key==='Enter')doLogin()">
+      <div class="login-card-title" data-i18n="login_title">Welcome 👋</div>
+
+      <!-- Tabs: New Account | Use Code -->
+      <div class="login-tabs">
+        <button class="login-tab active" id="ltab-new" onclick="switchLoginTab('new')" data-i18n="ltab_new">New / Sign In</button>
+        <button class="login-tab" id="ltab-code" onclick="switchLoginTab('code')" data-i18n="ltab_code">🔑 Use Code</button>
+      </div>
+
+      <!-- ── TAB: New / Sign In ── -->
+      <div id="tab-new">
+        <div class="login-card-sub" data-i18n="login_sub">Enter your details below. We'll send your unique access code to your email so you can log in from any device.</div>
+        <div class="login-field">
+          <label data-i18n="login_fname">First Name *</label>
+          <div class="login-input-wrap">
+            <span class="l-icon">👤</span>
+            <input type="text" id="login-fname" data-i18n-placeholder="login_fname_ph" placeholder="e.g. Ravi" maxlength="20">
+          </div>
+        </div>
+        <div class="login-field" style="margin-top:12px">
+          <label data-i18n="login_phone">Mobile Number *</label>
+          <div class="login-input-wrap">
+            <span class="l-icon">📱</span>
+            <input type="tel" id="login-phone" data-i18n-placeholder="login_phone_ph" placeholder="e.g. 9876543210" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')">
+          </div>
+        </div>
+        <div class="login-field" style="margin-top:12px">
+          <label data-i18n="login_email">Email Address *</label>
+          <div class="login-input-wrap">
+            <span class="l-icon">✉️</span>
+            <input type="email" id="login-email" data-i18n-placeholder="login_email_ph" placeholder="e.g. ravi@gmail.com" maxlength="80" onkeydown="if(event.key==='Enter')doLogin()">
+          </div>
+        </div>
+        <button class="login-btn" onclick="doLogin()" style="margin-top:18px" id="login-submit-btn">
+          <span id="login-btn-text" data-i18n="login_btn">Enter Dashboard</span> <span id="login-btn-arrow">→</span>
+        </button>
+
+        <!-- Previous users -->
+        <div id="prev-section" style="display:none">
+          <div class="login-divider" data-i18n="login_switch">or switch account</div>
+          <div class="prev-users" id="prev-users"></div>
         </div>
       </div>
-      <button class="login-btn" onclick="doLogin()">Enter Dashboard <span>→</span></button>
-      <div id="prev-section" style="display:none">
-        <div class="login-divider">or switch account</div>
-        <div class="prev-users" id="prev-users"></div>
+
+      <!-- ── TAB: Use Code ── -->
+      <div id="tab-code" style="display:none">
+        <div class="login-card-sub" data-i18n="code_sub">Enter your 8-character access code to restore your data on this device.</div>
+        <div class="login-field" style="margin-top:16px">
+          <label data-i18n="code_label">Your Access Code</label>
+          <div class="login-input-wrap code-input-wrap">
+            <span class="l-icon">🔑</span>
+            <input type="text" id="login-code" placeholder="e.g. RAVI-A3F7" maxlength="12" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')doLoginWithCode()">
+          </div>
+        </div>
+        <button class="login-btn" onclick="doLoginWithCode()" style="margin-top:18px"><span data-i18n="code_btn">Access My Data</span> <span>→</span></button>
+        <div class="login-card-sub" style="margin-top:12px;font-size:11px;opacity:0.7" data-i18n="code_hint">💡 Your code was shown after you first signed in. Check the app on your original device.</div>
       </div>
     </div>
-    <div class="login-note">🔒 Data stored locally in your browser &nbsp;·&nbsp; No signup required<br>Login details are sent to the app admin for record keeping.</div>
+    <div class="login-note" data-i18n="login_note">🔒 Data stored locally in your browser &nbsp;·&nbsp; No signup required</div>
   </div>
 </div>
 
@@ -437,23 +597,30 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sb-top">
-      <div class="sb-logo">₹ Kharch</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="sb-logo">₹ Kharch</div>
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="sl-en" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" id="sl-gu" onclick="setLang('gu')">ગુજ</button>
+        </div>
+      </div>
       <div class="sb-user">
         <div class="sb-avatar" id="sb-av">R</div>
         <div class="sb-uinfo">
           <div class="sb-uname" id="sb-name">Ravi</div>
           <div class="sb-usince" id="sb-since">Member</div>
         </div>
+        <button class="sb-logout" onclick="showMyCode()" title="Show my code" style="margin-right:4px">🔑</button>
         <button class="sb-logout" onclick="doLogout()" title="Switch account">⏏</button>
       </div>
     </div>
     <nav class="sb-nav">
-      <div class="nav-section-label">Pages</div>
-      <div class="nav-item active" onclick="goPage('dashboard',this)"><span class="ni">📊</span>Dashboard</div>
-      <div class="nav-item" onclick="goPage('emi',this)"><span class="ni">🏦</span>EMI Tracker</div>
-      <div class="nav-item" onclick="goPage('tips',this)"><span class="ni">💡</span>Financial Tips</div>
-      <div class="nav-item" onclick="goPage('invest',this)"><span class="ni">📈</span>Investment Ideas</div>
-      <div class="nav-section-label">Payment Totals</div>
+      <div class="nav-section-label" data-i18n="nav_pages">Pages</div>
+      <div class="nav-item active" onclick="goPage('dashboard',this)"><span class="ni">📊</span><span data-i18n="nav_dashboard">Dashboard</span></div>
+      <div class="nav-item" onclick="goPage('emi',this)"><span class="ni">🏦</span><span data-i18n="nav_emi">EMI Tracker</span></div>
+      <div class="nav-item" onclick="goPage('tips',this)"><span class="ni">💡</span><span data-i18n="nav_tips">Financial Tips</span></div>
+      <div class="nav-item" onclick="goPage('invest',this)"><span class="ni">📈</span><span data-i18n="nav_invest">Investment Ideas</span></div>
+      <div class="nav-section-label" data-i18n="nav_payments">Payment Totals</div>
     </nav>
     <div class="sb-stats">
       <div class="sst-row"><span class="sst-label">GPay</span><span class="sst-val" id="ss-g" style="color:var(--blue)">₹0</span></div>
@@ -482,8 +649,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <p id="dash-sub">May 2025 · Track every rupee, every day</p>
         </div>
         <div class="topbar-right">
-          <button class="btn-pdf" onclick="openPdf()">📄 PDF Report</button>
-          <button class="btn-primary" onclick="openModal()">+ Add Entry</button>
+          <button class="btn-pdf" onclick="openPdf()">📄 <span data-i18n="btn_pdf">PDF Report</span></button>
+          <button class="btn-primary" onclick="openModal()">+ <span data-i18n="btn_add_entry">Add Entry</span></button>
         </div>
       </div>
 
@@ -491,7 +658,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="tip-bar">
         <div class="tip-icon" id="tb-icon">💡</div>
         <div class="tip-content">
-          <div class="tip-label">💡 Today's Financial Tip</div>
+          <div class="tip-label">💡 <span data-i18n="tip_label">Today's Financial Tip</span></div>
           <div class="tip-text" id="tb-text">Loading tip…</div>
         </div>
         <div class="tip-nav">
@@ -502,10 +669,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
       <!-- METRICS -->
       <div class="metrics">
-        <div class="mc mc-g"><div class="mc-ico">💰</div><div class="mc-label">Total Income</div><div class="mc-val g" id="m-inc">₹0</div><div class="mc-sub" id="m-inc-c">0 entries</div></div>
-        <div class="mc mc-r"><div class="mc-ico">🛒</div><div class="mc-label">Total Expenses</div><div class="mc-val r" id="m-exp">₹0</div><div class="mc-sub" id="m-exp-c">0 entries</div></div>
-        <div class="mc mc-p"><div class="mc-ico">📈</div><div class="mc-label">Investments</div><div class="mc-val p" id="m-inv">₹0</div><div class="mc-sub" id="m-inv-c">0 entries</div></div>
-        <div class="mc mc-y"><div class="mc-ico">🏦</div><div class="mc-label">Net Savings</div><div class="mc-val y" id="m-sav">₹0</div><div class="mc-sub" id="m-sav-p">0% of income</div></div>
+        <div class="mc mc-g"><div class="mc-ico">💰</div><div class="mc-label" data-i18n="m_income">Total Income</div><div class="mc-val g" id="m-inc">₹0</div><div class="mc-sub" id="m-inc-c">0 entries</div></div>
+        <div class="mc mc-r"><div class="mc-ico">🛒</div><div class="mc-label" data-i18n="m_expense">Total Expenses</div><div class="mc-val r" id="m-exp">₹0</div><div class="mc-sub" id="m-exp-c">0 entries</div></div>
+        <div class="mc mc-p"><div class="mc-ico">📈</div><div class="mc-label" data-i18n="m_invest">Investments</div><div class="mc-val p" id="m-inv">₹0</div><div class="mc-sub" id="m-inv-c">0 entries</div></div>
+        <div class="mc mc-y"><div class="mc-ico">🏦</div><div class="mc-label" data-i18n="m_savings">Net Savings</div><div class="mc-val y" id="m-sav">₹0</div><div class="mc-sub" id="m-sav-p">0% of income</div></div>
       </div>
 
       <!-- DRAFTS -->
@@ -560,41 +727,37 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="page" id="page-emi">
       <div class="topbar">
         <div class="topbar-left">
-          <h2>EMI <em style="color:var(--red)">Tracker</em> 🏦</h2>
-          <p>Track your loan EMIs, due dates & never miss a payment</p>
+          <h2>EMI <em style="color:var(--red)" data-i18n="emi_tracker">Tracker</em> 🏦</h2>
+          <p data-i18n="emi_sub">Track your loan EMIs, due dates & never miss a payment</p>
         </div>
         <div class="topbar-right">
-          <button class="btn-primary" onclick="openEmiModal()">+ Add EMI</button>
+          <button class="btn-primary" onclick="openEmiModal()">+ <span data-i18n="btn_add_emi">Add EMI</span></button>
         </div>
       </div>
-
-      <!-- Hero summary -->
       <div class="emi-hero">
         <div class="emi-hero-left">
-          <h3>Stay on top of your <em>loans</em></h3>
-          <p>Add your EMIs with due dates and get a clear picture of upcoming payments. Mark them as paid each month to track your progress.</p>
+          <h3 data-i18n="emi_hero_title">Stay on top of your <em>loans</em></h3>
+          <p data-i18n="emi_hero_sub">Add your EMIs with due dates and get a clear picture of upcoming payments. Mark them as paid each month to track your progress.</p>
         </div>
         <div class="emi-summary">
           <div class="emi-sum-box">
             <div class="esb-val" id="emi-total">₹0</div>
-            <div class="esb-lbl">Monthly Burden</div>
+            <div class="esb-lbl" data-i18n="emi_monthly">Monthly Burden</div>
           </div>
           <div class="emi-sum-box esb-upcoming">
             <div class="esb-val" id="emi-upcoming-count">0</div>
-            <div class="esb-lbl">Due This Month</div>
+            <div class="esb-lbl" data-i18n="emi_due_month">Due This Month</div>
           </div>
           <div class="emi-sum-box esb-paid">
             <div class="esb-val" id="emi-paid-count">0</div>
-            <div class="esb-lbl">Paid This Month</div>
+            <div class="esb-lbl" data-i18n="emi_paid_month">Paid This Month</div>
           </div>
         </div>
       </div>
-
-      <!-- EMI grid -->
       <div class="emi-grid" id="emi-grid">
         <div class="emi-empty" style="grid-column:1/-1">
           <div class="ee-ico">🏦</div>
-          <p>No EMIs added yet.<br>Click <strong>+ Add EMI</strong> to start tracking your loans.</p>
+          <p data-i18n="emi_empty">No EMIs added yet.<br>Click <strong>+ Add EMI</strong> to start tracking your loans.</p>
         </div>
       </div>
     </div>
@@ -603,8 +766,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="page" id="page-tips">
       <div class="topbar">
         <div class="topbar-left">
-          <h2>Financial <em style="color:var(--accent2)">Tips</em> 💡</h2>
-          <p>Daily wisdom to grow your wealth and cut wasteful spending</p>
+          <h2>Financial <em style="color:var(--accent2)" data-i18n="tips_heading">Tips</em> 💡</h2>
+          <p data-i18n="tips_sub">Daily wisdom to grow your wealth and cut wasteful spending</p>
         </div>
       </div>
       <div class="tips-grid" id="tips-grid"></div>
@@ -614,11 +777,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="page" id="page-invest">
       <div class="topbar">
         <div class="topbar-left">
-          <h2>Investment <em style="color:var(--purple)">Ideas</em> 📈</h2>
-          <p>Curated options to grow your money — picked for Indian investors</p>
+          <h2>Investment <em style="color:var(--purple)" data-i18n="invest_heading">Ideas</em> 📈</h2>
+          <p data-i18n="invest_sub">Curated options to grow your money — picked for Indian investors</p>
         </div>
       </div>
-      <div class="disclaimer"><strong>⚠️ Disclaimer:</strong> These are general educational suggestions only. They are not personalised financial advice. Please consult a SEBI-registered financial advisor before investing. Past returns are not a guarantee of future performance.</div>
+      <div class="disclaimer"><strong>⚠️ <span data-i18n="disclaimer_head">Disclaimer:</span></strong> <span data-i18n="disclaimer_body">These are general educational suggestions only. They are not personalised financial advice. Please consult a SEBI-registered financial advisor before investing. Past returns are not a guarantee of future performance.</span></div>
       <div class="inv-grid" id="inv-grid"></div>
     </div>
 
@@ -690,6 +853,25 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
+<!-- USER CODE MODAL -->
+<div class="overlay" id="usercode-modal">
+  <div class="modal" style="width:420px;text-align:center">
+    <div style="font-size:48px;margin-bottom:12px">🎉</div>
+    <h3 style="font-family:var(--display);font-size:22px;margin-bottom:8px" data-i18n="code_modal_title">Your Access Code</h3>
+    <p style="color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:20px" data-i18n="code_modal_sub">Save this code! Use it to log in from any browser or device and access your data.</p>
+    <div class="ucode-box">
+      <div class="ucode-label" data-i18n="code_modal_label">Your Unique Code</div>
+      <div class="ucode-val" id="modal-code-val">----</div>
+      <div class="ucode-actions">
+        <button class="ucode-btn" onclick="copyCode()" data-i18n="code_copy">📋 Copy Code</button>
+        <button class="ucode-btn" onclick="shareCode()" data-i18n="code_share">📤 Share</button>
+      </div>
+      <div class="ucode-hint" data-i18n="code_modal_hint">Keep this code private. Anyone with this code can access your finance data.</div>
+    </div>
+    <button class="login-btn" style="margin-top:20px;width:100%" onclick="closeCodeModal()" data-i18n="code_modal_go">Go to Dashboard →</button>
+  </div>
+</div>
+
 <!-- EMI MODAL -->
 <div class="overlay" id="emi-modal" onclick="if(event.target===this)closeEmiModal()">
   <div class="modal" style="width:500px">
@@ -753,6 +935,33 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
+<!-- ══════════════════ MOBILE BOTTOM NAV ══════════════════ -->
+<nav class="mob-nav" id="mob-nav" style="display:none">
+  <div class="mob-nav-inner">
+    <button class="mob-nav-item active" id="mn-dashboard" onclick="goPage('dashboard',this);setMobNav('dashboard')">
+      <span class="mn-ico">📊</span><span data-i18n="nav_dashboard">Home</span>
+    </button>
+    <button class="mob-nav-item" id="mn-emi" onclick="goPage('emi',this);setMobNav('emi')">
+      <span class="mn-ico">🏦</span><span data-i18n="nav_emi_short">EMIs</span>
+    </button>
+    <!-- SPLIT FAB: Add Entry + Add EMI -->
+    <div class="mob-fab-wrap">
+      <button class="mob-fab fab-entry" onclick="openModal()">
+        <span class="fab-ico">＋</span><span data-i18n="fab_entry">Entry</span>
+      </button>
+      <button class="mob-fab fab-emi" onclick="openEmiModal()">
+        <span class="fab-ico">＋</span><span data-i18n="fab_emi">EMI</span>
+      </button>
+    </div>
+    <button class="mob-nav-item" id="mn-tips" onclick="goPage('tips',this);setMobNav('tips')">
+      <span class="mn-ico">💡</span><span data-i18n="nav_tips_short">Tips</span>
+    </button>
+    <button class="mob-nav-item" id="mn-invest" onclick="goPage('invest',this);setMobNav('invest')">
+      <span class="mn-ico">📈</span><span data-i18n="nav_invest_short">Invest</span>
+    </button>
+  </div>
+</nav>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -762,9 +971,314 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const CE={'Food & Dining':'🍽️','Transport':'🚗','Shopping':'🛍️','Utilities':'💡','Rent':'🏠','Health':'💊','Entertainment':'🎬','Education':'📚','Investment':'📈','Salary':'💼','Freelance':'💻','Other':'📌'};
 const CC=['#ff8c42','#4f9eff','#e8ff5a','#3de88a','#9b72ff','#ff4f6d','#5affd4','#f5c842','#5a5b70','#34d399','#fb923c','#94a3b8'];
-const EMAILJS_PK='YOUR_EMAILJS_PUBLIC_KEY'; // Replace with your EmailJS public key
-const EMAILJS_SVC='YOUR_SERVICE_ID';         // Replace with your EmailJS service ID
-const EMAILJS_TPL='YOUR_TEMPLATE_ID';        // Replace with your EmailJS template ID
+
+// ══════════════════════════════════════════
+// LANGUAGE / i18n
+// ══════════════════════════════════════════
+let currentLang = localStorage.getItem('kharch_lang') || 'en';
+
+const LANG = {
+  en: {
+    // Login
+    login_title:'Welcome 👋',
+    login_email:'Email Address *',
+    login_email_ph:'e.g. ravi@gmail.com',
+    login_sub:'Enter your details below. We\'ll send your unique access code to your email so you can log in from any device.',
+    login_label:'Your Full Name',
+    login_fname:'First Name *',
+    login_fname_ph:'e.g. Ravi',
+    login_phone:'Mobile Number *',
+    login_phone_ph:'e.g. 9876543210',
+    login_placeholder:'e.g. Ravi Sharma',
+    login_btn:'Enter Dashboard',
+    login_switch:'or switch account',
+    login_note:'🔒 Data stored locally in your browser · No signup required',
+    ltab_new:'New / Sign In',
+    ltab_code:'🔑 Use Code',
+    code_sub:'Enter your 8-character access code to restore your data on this device.',
+    code_label:'Your Access Code',
+    code_btn:'Access My Data',
+    code_hint:'💡 Your code was shown after you first signed in. Check the app on your original device.',
+    code_modal_title:'Your Access Code',
+    code_modal_sub:'Save this code! Use it to log in from any browser or device and access your data.',
+    code_modal_label:'Your Unique Code',
+    code_copy:'📋 Copy Code',
+    code_share:'📤 Share',
+    code_modal_hint:'Keep this code private. Anyone with this code can access your finance data.',
+    code_modal_go:'Go to Dashboard →',
+    // Nav
+    nav_pages:'Pages',
+    nav_dashboard:'Dashboard',
+    nav_emi:'EMI Tracker',
+    nav_tips:'Financial Tips',
+    nav_invest:'Investment Ideas',
+    nav_payments:'Payment Totals',
+    nav_emi_short:'EMIs',
+    nav_tips_short:'Tips',
+    nav_invest_short:'Invest',
+    // Buttons
+    btn_pdf:'PDF Report',
+    btn_add_entry:'Add Entry',
+    btn_add_emi:'Add EMI',
+    fab_entry:'Entry',
+    fab_emi:'EMI',
+    // Dashboard
+    tip_label:"Today's Financial Tip",
+    m_income:'Total Income',
+    m_expense:'Total Expenses',
+    m_invest:'Investments',
+    m_savings:'Net Savings',
+    dash_greeting_morning:'Good morning, ',
+    dash_greeting_afternoon:'Good afternoon, ',
+    dash_greeting_evening:'Good evening, ',
+    dash_sub_fmt:' · Track every rupee, every day',
+    // EMI
+    emi_tracker:'Tracker',
+    emi_sub:'Track your loan EMIs, due dates & never miss a payment',
+    emi_hero_title:'Stay on top of your loans',
+    emi_hero_sub:'Add your EMIs with due dates and get a clear picture of upcoming payments. Mark them as paid each month to track your progress.',
+    emi_monthly:'Monthly Burden',
+    emi_due_month:'Due This Month',
+    emi_paid_month:'Paid This Month',
+    emi_empty:'No EMIs added yet.\nClick + Add EMI to start tracking your loans.',
+    // EMI status
+    emi_overdue:'OVERDUE',
+    emi_today:'DUE TODAY',
+    emi_upcoming:'DUE SOON',
+    emi_due:'UPCOMING',
+    emi_paid:'PAID',
+    emi_mark_paid:'✅ Mark as Paid',
+    emi_mark_unpaid:'↩️ Mark Unpaid',
+    emi_was_due:'⚠️ Overdue — was due on',
+    emi_due_today:'🔔 Due TODAY —',
+    emi_due_in:'⏰ Due in',
+    emi_day:'day',
+    emi_days:'days',
+    emi_paid_month_txt:'✅ Paid this month',
+    emi_due_every:'📅 Due on',
+    emi_due_every2:'of every month',
+    emi_of:'of',
+    // Tips page
+    tips_heading:'Tips',
+    tips_sub:'Daily wisdom to grow your wealth and cut wasteful spending',
+    // Invest page
+    invest_heading:'Ideas',
+    invest_sub:'Curated options to grow your money — picked for Indian investors',
+    disclaimer_head:'Disclaimer:',
+    disclaimer_body:'These are general educational suggestions only. They are not personalised financial advice. Please consult a SEBI-registered financial advisor before investing. Past returns are not a guarantee of future performance.',
+    // Modal labels
+    modal_new:'New Entry',
+    modal_draft:'✏️ Resume Draft',
+    modal_entry_type:'Entry Type',
+    modal_desc:'Description *',
+    modal_amt:'Amount (₹) *',
+    modal_cat:'Category',
+    modal_date:'Date',
+    modal_pay:'Payment Method',
+    modal_note:'Note (optional)',
+    modal_save_draft:'Save Draft',
+    modal_add:'Add Entry',
+    // EMI modal
+    emi_modal_title:'➕ Add New EMI',
+    emi_loan_name:'Loan Name *',
+    emi_lender:'Lender / Bank',
+    emi_amt:'Monthly EMI Amount (₹) *',
+    emi_due_day:'Due Date (Day of Month) *',
+    emi_total_emis:'Total EMIs',
+    emi_paid_so_far:'EMIs Paid So Far',
+    emi_cat:'Loan Category',
+    emi_notify:'🔔 Show reminder badge when due date is near (within 3 days)',
+    emi_note:'Notes (optional)',
+    emi_save:'💾 Save EMI',
+    // Toast msgs
+    toast_welcome:'👋 Welcome, ',
+    toast_added_exp:'✅ Expense added!',
+    toast_added_inc:'✅ Income added!',
+    toast_added_inv:'✅ Investment added!',
+    toast_deleted:'🗑️ Deleted',
+    toast_draft_saved:'📝 Draft saved!',
+    toast_draft_removed:'🗑️ Draft removed',
+    toast_emi_added:'✅ EMI added!',
+    toast_emi_paid:'✅ EMI marked as paid!',
+    toast_emi_unpaid:'↩️ Marked as unpaid',
+    toast_emi_deleted:'🗑️ EMI removed',
+    // Footer
+    footer_by:'Made with',
+    footer_by2:'by',
+    footer_local:'All data is stored locally on your device',
+    // Period
+    sb_period:'Period',
+  },
+  gu: {
+    // Login
+    login_title:'સ્વાગત છે 👋',
+    login_email:'ઇમેઇલ સરનામું *',
+    login_email_ph:'દા.ત. ravi@gmail.com',
+    login_sub:'નીચેની વિગતો દાખલ કરો. અમે તમારો અનોખો એક્સેસ કોડ તમારા ઇમેઇલ પર મોકલીશું.',
+    login_label:'તમારું પૂરું નામ',
+    login_fname:'પ્રથમ નામ *',
+    login_fname_ph:'દા.ત. રવિ',
+    login_phone:'મોબાઇલ નંબર *',
+    login_phone_ph:'દા.ત. 9876543210',
+    login_placeholder:'દા.ત. રવિ શર્મા',
+    login_btn:'ડૅશબોર્ડ ખોલો',
+    login_switch:'અથવા એકાઉન્ટ બદલો',
+    login_note:'🔒 ડેટા તમારા બ્રાઉઝરમાં સ્ટોર છે · સાઇનઅપ જરૂરી નથી',
+    ltab_new:'નવું / સાઇન ઇન',
+    ltab_code:'🔑 કોડ વાપરો',
+    code_sub:'તમારો 8-અક્ષરનો એક્સેસ કોડ દાખલ કરો.',
+    code_label:'તમારો એક્સેસ કોડ',
+    code_btn:'મારો ડેટા ખોલો',
+    code_hint:'💡 તમારો કોડ પ્રથમ સાઇન-ઇન પછી બતાવ્યો હતો.',
+    code_modal_title:'તમારો એક્સેસ કોડ',
+    code_modal_sub:'આ કોડ સાચવો! કોઈ પણ બ્રાઉઝર અથવા ડિવાઇસ પર ઉપયોગ કરો.',
+    code_modal_label:'તમારો અનોખો કોડ',
+    code_copy:'📋 કોડ કૉપિ કરો',
+    code_share:'📤 શૅર કરો',
+    code_modal_hint:'આ કોડ ખાનગી રાખો. આ કોડ ધરાવનાર કોઈ પણ વ્યક્તિ તમારો ડેટા ઍક્સેસ કરી શકે.',
+    code_modal_go:'ડૅશબોર્ડ પર જાઓ →',
+    // Nav
+    nav_pages:'પૃષ્ઠો',
+    nav_dashboard:'ડૅશબોર્ડ',
+    nav_emi:'EMI ટ્રૅકર',
+    nav_tips:'નાણાંકીય ટિપ્સ',
+    nav_invest:'રોકાણ વિચારો',
+    nav_payments:'ચૂકવણી કુલ',
+    nav_emi_short:'EMIs',
+    nav_tips_short:'ટિપ્સ',
+    nav_invest_short:'રોકાણ',
+    // Buttons
+    btn_pdf:'PDF રિપોર્ટ',
+    btn_add_entry:'+ એન્ટ્રી ઉમેરો',
+    btn_add_emi:'+ EMI ઉમેરો',
+    fab_entry:'એન્ટ્રી',
+    fab_emi:'EMI',
+    // Dashboard
+    tip_label:'આજની નાણાંકીય ટિપ',
+    m_income:'કુલ આવક',
+    m_expense:'કુલ ખર્ચ',
+    m_invest:'રોકાણ',
+    m_savings:'ચોખ્ખી બચત',
+    dash_greeting_morning:'સુપ્રભાત, ',
+    dash_greeting_afternoon:'શુભ બપોર, ',
+    dash_greeting_evening:'શુભ સાંજ, ',
+    dash_sub_fmt:' · દરેક રૂપિયો ટ્રૅક કરો',
+    // EMI
+    emi_tracker:'ટ્રૅકર',
+    emi_sub:'તમારી EMI, છેલ્લી તારીખ ટ્રૅક કરો & ક્યારેય ચૂકવવાનું ભૂલો નહીં',
+    emi_hero_title:'તમારી લોન પર નજર રાખો',
+    emi_hero_sub:'EMI અને છેલ્લી તારીખ ઉમેરો. દર મહિને ચૂકવ્યા પછી ટિક કરો અને પ્રગતિ ટ્રૅક કરો.',
+    emi_monthly:'માસિક ભાર',
+    emi_due_month:'આ મહિને બાકી',
+    emi_paid_month:'આ મહિને ચૂકવ્યું',
+    emi_empty:'હજુ કોઈ EMI ઉમેરી નથી.\n+ EMI ઉમેરો પર ક્લિક કરો.',
+    // EMI status
+    emi_overdue:'બાકી',
+    emi_today:'આજે બાકી',
+    emi_upcoming:'જલ્દી બાકી',
+    emi_due:'આગામી',
+    emi_paid:'ચૂકવ્યું',
+    emi_mark_paid:'✅ ચૂકવ્યા તરીકે માર્ક કરો',
+    emi_mark_unpaid:'↩️ અચૂક્વ્યા તરીકે માર્ક કરો',
+    emi_was_due:'⚠️ બાકી — છેલ્લી તારીખ હતી',
+    emi_due_today:'🔔 આજે જ બાકી —',
+    emi_due_in:'⏰ બાકી છે',
+    emi_day:'દિવસ',
+    emi_days:'દિવસ',
+    emi_paid_month_txt:'✅ આ મહિને ચૂકવ્યું',
+    emi_due_every:'📅 દર મહિને',
+    emi_due_every2:'ના રોજ બાકી',
+    emi_of:'માંથી',
+    // Tips page
+    tips_heading:'ટિપ્સ',
+    tips_sub:'દરરોજ નવી ટિપ — સંપત્તિ વધારો, ખોટો ખર્ચ ઘટાડો',
+    // Invest page
+    invest_heading:'વિચારો',
+    invest_sub:'ભારતીય રોકાણકારો માટે પસંદ કરેલ રોકાણ વિકલ્પો',
+    disclaimer_head:'ચેતવણી:',
+    disclaimer_body:'આ ફક્ત સામાન્ય શૈક્ષણિક સૂચનો છે. આ વ્યક્તિગત નાણાંકીય સલાહ નથી. રોકાણ કરતા પહેલાં SEBI-નોંધાયેલ નાણાંકીય સલાહકારની સલાહ લો. ભૂતકાળનો વળતર ભવિષ્ય માટે ગેરંટી નથી.',
+    // Modal labels
+    modal_new:'નવી એન્ટ્રી',
+    modal_draft:'✏️ ડ્રાફ્ટ ચાલુ રાખો',
+    modal_entry_type:'એન્ટ્રી પ્રકાર',
+    modal_desc:'વર્ણન *',
+    modal_amt:'રકમ (₹) *',
+    modal_cat:'શ્રેણી',
+    modal_date:'તારીખ',
+    modal_pay:'ચૂકવણી પદ્ધતિ',
+    modal_note:'નોંધ (વૈકલ્પિક)',
+    modal_save_draft:'ડ્રાફ્ટ સાચવો',
+    modal_add:'એન્ટ્રી ઉમેરો',
+    // EMI modal
+    emi_modal_title:'➕ નવી EMI ઉમેરો',
+    emi_loan_name:'લોનનું નામ *',
+    emi_lender:'ધિરાણદાર / બેંક',
+    emi_amt:'માસિક EMI રકમ (₹) *',
+    emi_due_day:'છેલ્લી તારીખ (મહિનાની તારીખ) *',
+    emi_total_emis:'કુલ EMI',
+    emi_paid_so_far:'અત્યાર સુધી ચૂકવ્યું',
+    emi_cat:'લોન શ્રેણી',
+    emi_notify:'🔔 છેલ્લી તારીખ નજીક હોય ત્યારે રીમાઇન્ડર બૅજ બતાવો (3 દિવસ અગાઉ)',
+    emi_note:'નોંધ (વૈકલ્પિક)',
+    emi_save:'💾 EMI સાચવો',
+    // Toast
+    toast_welcome:'👋 સ્વાગત છે, ',
+    toast_added_exp:'✅ ખર્ચ ઉમેર્યો!',
+    toast_added_inc:'✅ આવક ઉમેરી!',
+    toast_added_inv:'✅ રોકાણ ઉમેર્યું!',
+    toast_deleted:'🗑️ ડિલીટ થઈ ગયું',
+    toast_draft_saved:'📝 ડ્રાફ્ટ સચવાયો!',
+    toast_draft_removed:'🗑️ ડ્રાફ્ટ દૂર કર્યો',
+    toast_emi_added:'✅ EMI ઉમેર્યું!',
+    toast_emi_paid:'✅ EMI ચૂકવ્યા તરીકે માર્ક!',
+    toast_emi_unpaid:'↩️ અચૂક્વ્યા તરીકે માર્ક',
+    toast_emi_deleted:'🗑️ EMI દૂર કર્યું',
+    // Footer
+    footer_by:'બનાવ્યું',
+    footer_by2:'દ્વારા',
+    footer_local:'બધો ડેટા તમારા ડિવાઇસ પર સ્ટોર છે',
+    sb_period:'સમયગાળો',
+  }
+};
+
+function t(key){ return (LANG[currentLang]||LANG.en)[key] || (LANG.en[key] || key); }
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('kharch_lang', lang);
+  // Update all toggle buttons
+  ['ll-en','sl-en'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',lang==='en');});
+  ['ll-gu','sl-gu'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',lang==='gu');});
+  // Apply all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    const val=t(key);
+    if(val) el.innerHTML=val.replace(/\n/g,'<br>');
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key=el.getAttribute('data-i18n-placeholder');
+    el.placeholder=t(key)||el.placeholder;
+  });
+  // Re-render dynamic content if logged in
+  if(currentUser){
+    updateMonthDisplay();
+    render();
+    renderEmis();
+    buildTipsPage();
+    buildInvestPage();
+    // Update greeting
+    const hr=new Date().getHours();
+    const greet=hr<12?t('dash_greeting_morning'):hr<17?t('dash_greeting_afternoon'):t('dash_greeting_evening');
+    document.getElementById('dash-title').childNodes[0].textContent=greet;
+    // Tip
+    showTip(tipIdx);
+  }
+}
+
+// Apply language on page load
+function applyLangOnLoad(){
+  setLang(currentLang);
+}
 
 const TIPS=[
   {icon:'💸',text:'Follow the 50/30/20 rule: 50% needs, 30% wants, 20% savings. Small adjustments compound into big wealth over time.',cat:'Budgeting',color:'var(--accent)'},
@@ -821,90 +1335,424 @@ function nextTip(){showTip(tipIdx+1);}
 function prevTip(){showTip(tipIdx-1);}
 
 // ══════════════════════════════════════════
-// LOGIN
+// LOGIN — First Name + Phone → User Code
 // ══════════════════════════════════════════
 function getUsers(){return JSON.parse(localStorage.getItem('kharch_users')||'[]');}
 function saveUsers(u){localStorage.setItem('kharch_users',JSON.stringify(u));}
-function skey(name,t){return`kharch_${name.toLowerCase().replace(/\s+/g,'_')}_${t}`;}
+function skey(code,t){return`kharch_${code}_${t}`;}
+
+/** Generate a deterministic 8-char code from first name + phone
+ *  Format: RAVI-A3F7  (first 4 chars of name + dash + 4 hex chars from phone hash)
+ */
+function generateCode(firstName, phone){
+  const name = firstName.trim().toUpperCase().replace(/[^A-Z]/g,'').substring(0,4).padEnd(4,'X');
+  // Simple hash of phone digits → 4 hex chars
+  let hash = 0;
+  for(let i=0;i<phone.length;i++) hash = ((hash<<5)-hash) + phone.charCodeAt(i) | 0;
+  const hex = Math.abs(hash).toString(16).toUpperCase().padStart(4,'0').substring(0,4);
+  return `${name}-${hex}`;
+}
+
+function switchLoginTab(tab){
+  document.getElementById('tab-new').style.display = tab==='new'?'block':'none';
+  document.getElementById('tab-code').style.display = tab==='code'?'block':'none';
+  document.getElementById('ltab-new').classList.toggle('active', tab==='new');
+  document.getElementById('ltab-code').classList.toggle('active', tab==='code');
+}
 
 function renderPrev(){
-  const users=getUsers();
-  const sec=document.getElementById('prev-section');
-  const ul=document.getElementById('prev-users');
+  const users = getUsers();
+  const sec = document.getElementById('prev-section');
+  const ul = document.getElementById('prev-users');
   if(!users.length){sec.style.display='none';return;}
   sec.style.display='block';
-  ul.innerHTML=users.map(u=>`<div class="prev-pill" onclick="quickLogin('${u.name}')"><div class="av">${u.name[0].toUpperCase()}</div>${u.name}</div>`).join('');
+  ul.innerHTML = users.map(u=>`<div class="prev-pill" onclick="quickLogin('${u.code}','${u.displayName}')"><div class="av">${u.displayName[0].toUpperCase()}</div>${u.displayName}</div>`).join('');
 }
+
 function doLogin(){
-  const name=document.getElementById('login-name').value.trim();
-  if(!name||name.length<2){showToast('⚠️ Enter your name (min 2 chars)','warn');return;}
-  loginAs(name);
+  const fname = (document.getElementById('login-fname').value||'').trim();
+  const phone = (document.getElementById('login-phone').value||'').trim();
+  const email = (document.getElementById('login-email').value||'').trim().toLowerCase();
+  if(!fname || fname.length < 2){showToast('⚠️ Enter your first name (min 2 chars)','warn');return;}
+  if(!phone || phone.length < 10){showToast('⚠️ Enter a valid 10-digit mobile number','warn');return;}
+  if(!email || !email.includes('@') || !email.includes('.')){showToast('⚠️ Enter a valid email address','warn');return;}
+  const code = generateCode(fname, phone);
+  const users = getUsers();
+  const isNew = !users.find(u=>u.code===code);
+  loginAs(code, fname, email, isNew);
 }
-function quickLogin(name){document.getElementById('login-name').value=name;loginAs(name);}
-function loginAs(name){
-  currentUser=name;
-  let users=getUsers();
-  const existing=users.find(u=>u.name.toLowerCase()===name.toLowerCase());
-  const sinceStr=existing?existing.since:new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+
+function doLoginWithCode(){
+  const raw = (document.getElementById('login-code').value||'').trim().toUpperCase();
+  if(raw.length < 5){showToast('⚠️ Enter your access code','warn');return;}
+  const users = getUsers();
+  const found = users.find(u=>u.code===raw);
+  const displayName = found ? found.displayName : raw.split('-')[0];
+  const email = found ? (found.email||'') : '';
+  loginAs(raw, displayName, email, false, true);
+}
+
+function quickLogin(code, displayName){
+  loginAs(code, displayName, '', false);
+}
+
+let _pendingCodeModal = false;
+
+function loginAs(code, displayName, email='', isNew=false, fromCode=false){
+  currentUser = code;
+  let users = getUsers();
+  const existing = users.find(u=>u.code===code);
+  const sinceStr = existing ? existing.since : new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+  const userEmail = email || (existing && existing.email) || '';
   if(!existing){
-    users.unshift({name,since:sinceStr,loginTime:new Date().toISOString()});
-    if(users.length>10)users=users.slice(0,10);
+    users.unshift({code, displayName, email:userEmail, since:sinceStr, loginTime:new Date().toISOString()});
+    if(users.length>10) users=users.slice(0,10);
     saveUsers(users);
-    // Send email notification
-    sendLoginEmail(name,sinceStr);
   } else {
-    // Update last login
-    existing.lastLogin=new Date().toISOString();
+    existing.lastLogin = new Date().toISOString();
+    if(displayName && displayName!==existing.displayName) existing.displayName=displayName;
+    if(userEmail && !existing.email) existing.email=userEmail;
     saveUsers(users);
-    sendLoginEmail(name,sinceStr);
   }
-  entries=JSON.parse(localStorage.getItem(skey(name,'entries'))||'[]');
-  drafts=JSON.parse(localStorage.getItem(skey(name,'drafts'))||'[]');
-  emis=JSON.parse(localStorage.getItem(skey(name,'emis'))||'[]');
-  const init=name[0].toUpperCase();
-  document.getElementById('sb-av').textContent=init;
-  document.getElementById('sb-name').textContent=name;
-  document.getElementById('sb-since').textContent=`Since ${sinceStr}`;
-  document.getElementById('dash-name').textContent=name.split(' ')[0];
-  const hr=new Date().getHours();
-  document.getElementById('dash-title').querySelector('em').textContent=name.split(' ')[0];
-  document.getElementById('dash-title').childNodes[0].textContent=hr<12?'Good morning, ':hr<17?'Good afternoon, ':'Good evening, ';
+
+  entries = JSON.parse(localStorage.getItem(skey(code,'entries'))||'[]');
+  drafts  = JSON.parse(localStorage.getItem(skey(code,'drafts'))||'[]');
+  emis    = JSON.parse(localStorage.getItem(skey(code,'emis'))||'[]');
+
+  const init = displayName[0].toUpperCase();
+  document.getElementById('sb-av').textContent = init;
+  document.getElementById('sb-name').textContent = displayName;
+  document.getElementById('sb-since').textContent = `Since ${sinceStr}`;
+  document.getElementById('dash-name').textContent = displayName.split(' ')[0];
+  const hr = new Date().getHours();
+  document.getElementById('dash-title').querySelector('em').textContent = displayName.split(' ')[0];
+  document.getElementById('dash-title').childNodes[0].textContent = hr<12?t('dash_greeting_morning'):hr<17?t('dash_greeting_afternoon'):t('dash_greeting_evening');
+
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-screen').classList.add('visible');
   document.getElementById('app-footer').style.display='block';
+  document.getElementById('mob-nav').style.display='block';
   updateMonthDisplay();
-  // Seed daily tip — changes every day automatically
   showTip(getDailyTipIdx());
   buildTipsPage();
   buildInvestPage();
   renderEmis();
   render();
-  showToast(`👋 Welcome, ${name.split(' ')[0]}!`,'ok');
+
+  // Send emails via EmailJS
+  sendEmails(displayName, userEmail, code, sinceStr, isNew);
+
+  // Show code modal only for brand-new users
+  if(isNew){
+    document.getElementById('modal-code-val').textContent = code;
+    document.getElementById('usercode-modal').classList.add('open');
+  } else {
+    showToast(`${t('toast_welcome')}${displayName.split(' ')[0]}!`,'ok');
+  }
 }
 
-// ══════════════════════════════════════════
-// EMAIL (EmailJS)
-// ══════════════════════════════════════════
-function sendLoginEmail(name,since){
-  try{
-    emailjs.init(EMAILJS_PK);
-    emailjs.send(EMAILJS_SVC,EMAILJS_TPL,{
-      to_email:'contact.becreatif@gmail.com',
-      user_name:name,
-      login_time:new Date().toLocaleString('en-IN'),
-      member_since:since,
-      device:navigator.userAgent.substring(0,80),
-      entries_count:entries.length
-    }).then(()=>console.log('Login email sent'),err=>console.log('Email err:',err));
-  }catch(e){console.log('EmailJS not configured:',e);}
+function closeCodeModal(){
+  document.getElementById('usercode-modal').classList.remove('open');
+  showToast(`${t('toast_welcome')}${currentUser.split('-')[0]}!`,'ok');
 }
+
+let _copyTimeout;
+function copyCode(){
+  const code = document.getElementById('modal-code-val').textContent;
+  navigator.clipboard.writeText(code).then(()=>{
+    showToast('📋 Code copied!','ok');
+  }).catch(()=>{
+    // fallback
+    const el=document.createElement('textarea');el.value=code;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    showToast('📋 Code copied!','ok');
+  });
+}
+function shareCode(){
+  const code = document.getElementById('modal-code-val').textContent;
+  const txt = `My Kharch access code: ${code}\nUse this to log into your finance tracker on any device.`;
+  if(navigator.share){navigator.share({title:'My Kharch Code',text:txt}).catch(()=>{});}
+  else{navigator.clipboard.writeText(txt).then(()=>showToast('📋 Copied to clipboard!','ok'));}
+}
+
+// Show user code from inside the app (sidebar or profile)
+function showMyCode(){
+  if(!currentUser) return;
+  document.getElementById('modal-code-val').textContent = currentUser;
+  document.getElementById('usercode-modal').classList.add('open');
+}
+
+
+// ══════════════════════════════════════════
+// EMAIL — EmailJS SDK (proper implementation)
+// Bhavin needs to complete 3-step setup below
+// ══════════════════════════════════════════
+
+// ┌─────────────────────────────────────────┐
+// │  STEP 1: Go to https://emailjs.com      │
+// │  STEP 2: Create account with            │
+// │          contact.becreatif@gmail.com    │
+// │  STEP 3: Add Gmail service → copy       │
+// │          Service ID here ↓              │
+// │  STEP 4: Create template (instructions  │
+// │          in code below) → copy IDs here │
+// └─────────────────────────────────────────┘
+const EJS_PUBLIC_KEY    = 'YOUR_PUBLIC_KEY';       // Dashboard → Account → Public Key
+const EJS_SERVICE_ID    = 'YOUR_SERVICE_ID';        // Email Services → Service ID
+const EJS_TPL_WELCOME   = 'YOUR_WELCOME_TPL_ID';   // Email Templates → Template ID (welcome)
+const EJS_TPL_ADMIN     = 'YOUR_ADMIN_TPL_ID';     // Email Templates → Template ID (admin)
+
+/*
+ ═══════════════════════════════════════════════════
+  HOW TO SET UP EMAILJS (5 minutes, free forever)
+ ═══════════════════════════════════════════════════
+
+ 1. Go to https://emailjs.com → Sign Up (free)
+    Use: contact.becreatif@gmail.com
+
+ 2. ADD EMAIL SERVICE:
+    → Email Services → Add New Service → Gmail
+    → Connect your Gmail account
+    → Copy the Service ID  (e.g. service_abc123)
+    → Paste into EJS_SERVICE_ID above
+
+ 3. CREATE WELCOME TEMPLATE:
+    → Email Templates → Create New Template
+    → Subject: 🎉 Welcome to Kharch, {{to_name}}! Your Code: {{user_code}}
+    → To Email: {{to_email}}
+    → Body: (paste any HTML or use {{message_html}})
+    → Save → Copy Template ID → paste into EJS_TPL_WELCOME
+
+ 4. CREATE ADMIN TEMPLATE:
+    → Email Templates → Create New Template
+    → Subject: [Kharch] {{is_new}} — {{user_name}}
+    → To Email: contact.becreatif@gmail.com
+    → Body: {{message_html}}
+    → Save → Copy Template ID → paste into EJS_TPL_ADMIN
+
+ 5. GET PUBLIC KEY:
+    → Account → General → Public Key
+    → Paste into EJS_PUBLIC_KEY above
+
+ 6. SAVE FILE — emails will now send automatically!
+
+ ═══════════════════════════════════════════════════
+*/
+
+let _ejsInited = false;
+function initEJS(){
+  if(_ejsInited) return;
+  if(typeof emailjs === 'undefined'){ console.warn('EmailJS SDK not loaded'); return; }
+  emailjs.init(EJS_PUBLIC_KEY);
+  _ejsInited = true;
+}
+
+function isEJSConfigured(){
+  return EJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY' &&
+         EJS_SERVICE_ID !== 'YOUR_SERVICE_ID' &&
+         EJS_TPL_WELCOME !== 'YOUR_WELCOME_TPL_ID' &&
+         EJS_TPL_ADMIN   !== 'YOUR_ADMIN_TPL_ID';
+}
+
+function buildWelcomeEmail(name, code){
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f8;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f8;padding:30px 10px">
+ <tr><td align="center">
+  <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;border-radius:18px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.12)">
+
+   <!-- HEADER -->
+   <tr><td style="background:#08090d;padding:36px 40px;text-align:center;border-bottom:3px solid #e8ff5a">
+     <div style="font-size:44px;line-height:1;margin-bottom:8px">₹</div>
+     <div style="font-size:30px;font-weight:900;color:#eeeef2;letter-spacing:-1px;font-family:Georgia,serif">Kharch</div>
+     <div style="font-size:11px;color:#5a5b70;margin-top:5px;letter-spacing:3px;text-transform:uppercase">Personal Finance Tracker</div>
+   </td></tr>
+
+   <!-- HERO -->
+   <tr><td style="background:#0e0f15;padding:36px 40px 28px">
+     <p style="font-size:24px;font-weight:800;color:#eeeef2;margin:0 0 8px">Hey ${name}! 👋</p>
+     <p style="font-size:14px;color:#8888a0;line-height:1.8;margin:0 0 28px">Welcome to <strong style="color:#e8ff5a">Kharch</strong> — your personal finance tracker built for India. You are now ready to track every rupee, every day.</p>
+
+     <!-- CODE BOX -->
+     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px">
+      <tr><td style="background:#1c1d28;border:2px dashed #e8ff5a;border-radius:16px;padding:28px;text-align:center">
+        <p style="font-size:11px;color:#5a5b70;text-transform:uppercase;letter-spacing:3px;margin:0 0 12px;font-family:'Courier New',monospace">Your Unique Access Code</p>
+        <p style="font-size:36px;font-weight:900;color:#e8ff5a;letter-spacing:8px;font-family:'Courier New',monospace;margin:0 0 14px;word-break:break-all">${code}</p>
+        <p style="font-size:12px;color:#8888a0;margin:0;line-height:1.7">Use this code on the <strong style="color:#eeeef2">🔑 Use Code</strong> tab on the login screen to access your data from <strong style="color:#eeeef2">any browser or device.</strong><br>Keep this code safe — treat it like a password.</p>
+      </td></tr>
+     </table>
+
+     <!-- FEATURES TITLE -->
+     <p style="font-size:11px;font-weight:800;color:#5a5b70;text-transform:uppercase;letter-spacing:2px;margin:0 0 18px">✨ Everything Kharch Can Do For You</p>
+
+     <!-- FEATURE LIST -->
+     ${[
+       ['📊','Dashboard & Analytics','See your income, expenses and savings at a glance with beautiful interactive charts. Filter by month, category or payment method.'],
+       ['🏦','EMI Tracker','Add all your loan EMIs with due dates. Get colour-coded reminders — Overdue, Due Today, Due Soon. Track payoff progress with a visual bar.'],
+       ['💡','Daily Finance Tips','A fresh money tip every single day — covering budgeting, investing, savings habits, and wealth-building for Indian families.'],
+       ['📈','Investment Ideas','Curated investment options for Indian investors — Index Funds, PPF, ELSS, Sovereign Gold Bonds, REITs, NPS — each with risk ratings.'],
+       ['📄','PDF Reports','Export a beautiful monthly PDF report with transaction history, category breakdown, and payment method summary — shareable in one tap.'],
+       ['🔑','Multi-Device Access','Use your unique code to log in from any phone, laptop, or browser. Your full data history loads instantly — no account needed.'],
+       ['🇬🇧 🇮🇳','English & Gujarati','Full bilingual support — switch between English and Gujarati instantly from anywhere in the app.'],
+     ].map(([ico,title,desc])=>`
+     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px">
+      <tr>
+       <td width="52" valign="top">
+         <div style="width:44px;height:44px;background:#1c1d28;border-radius:12px;text-align:center;font-size:22px;line-height:44px">${ico}</div>
+       </td>
+       <td valign="top" style="padding-left:14px">
+         <p style="font-size:13px;font-weight:700;color:#eeeef2;margin:0 0 4px">${title}</p>
+         <p style="font-size:12px;color:#5a5b70;margin:0;line-height:1.65">${desc}</p>
+       </td>
+      </tr>
+     </table>`).join('')}
+
+     <!-- HOW TO USE ON ANOTHER DEVICE -->
+     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;margin-bottom:8px">
+      <tr><td style="background:#14151d;border:1px solid #252636;border-radius:14px;padding:22px 24px">
+        <p style="font-size:12px;font-weight:700;color:#eeeef2;margin:0 0 14px">📱 How to Open Kharch on a New Device</p>
+        ${[
+          'Open the Kharch app in any browser on your new device',
+          'Click the <strong style="color:#e8ff5a">🔑 Use Code</strong> tab on the login screen',
+          `Enter your code: <strong style="color:#e8ff5a;font-family:'Courier New',monospace;letter-spacing:2px">${code}</strong>`,
+          'Tap "Access My Data" — your entire history is restored instantly'
+        ].map((step,i)=>`
+        <div style="display:flex;align-items:flex-start;margin-bottom:10px">
+          <span style="min-width:20px;height:20px;background:#e8ff5a;color:#08090d;border-radius:50%;text-align:center;line-height:20px;font-size:11px;font-weight:800;margin-right:12px;flex-shrink:0;display:inline-block">${i+1}</span>
+          <span style="font-size:12px;color:#8888a0;line-height:1.65">${step}</span>
+        </div>`).join('')}
+      </td></tr>
+     </table>
+
+     <p style="font-size:13px;color:#8888a0;line-height:1.8;margin:24px 0 0">Happy tracking! Every rupee saved today brings you closer to your goals tomorrow. 🎯</p>
+   </td></tr>
+
+   <!-- FOOTER -->
+   <tr><td style="background:#0a0b10;padding:28px 40px;text-align:center;border-top:1px solid #1c1d28">
+     <p style="font-size:18px;font-weight:900;color:#e8ff5a;margin:0 0 4px;font-family:Georgia,serif">₹ Kharch</p>
+     <p style="font-size:11px;color:#5a5b70;margin:0 0 16px">Personal Finance Tracker for India</p>
+     <p style="font-size:12px;color:#383848;margin:0;line-height:2">
+       Built with ❤️ by <strong style="color:#8888a0">Bhavin Gojiya</strong><br>
+       <span style="color:#2d2d40">Founder &amp; Developer — Kharch App</span><br>
+       <span style="color:#2d2d40">contact.becreatif@gmail.com</span>
+     </p>
+     <p style="font-size:10px;color:#252636;margin:14px 0 0;line-height:1.6">This email was sent because you registered on Kharch.<br>Your financial data is stored only on your own device — we never store it on our servers.</p>
+   </td></tr>
+
+  </table>
+ </td></tr>
+</table>
+</body></html>`;
+}
+
+function buildAdminEmail(name, userEmail, code, isNew){
+  const badge = isNew ? '🆕 NEW USER' : '🔄 RETURNING LOGIN';
+  const badgeColor = isNew ? '#1a4a1a' : '#1a1a4a';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:20px;background:#f0f0f0;font-family:Arial,sans-serif;">
+<table width="560" style="max-width:560px;width:100%;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #ddd;box-shadow:0 2px 12px rgba(0,0,0,0.08)">
+ <tr><td style="background:${badgeColor};padding:20px 28px">
+   <p style="color:#fff;font-size:18px;font-weight:700;margin:0">${badge}</p>
+   <p style="color:#aaa;font-size:12px;margin:5px 0 0">Kharch App · ${new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}</p>
+ </td></tr>
+ <tr><td style="padding:24px 28px">
+   <table width="100%" cellpadding="0" cellspacing="0">
+     <tr><td style="padding:6px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Name</span><strong style="font-size:13px;color:#111">${name}</strong></td></tr>
+     <tr><td style="padding:6px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Email</span><span style="font-size:13px;color:#111">${userEmail||'<em style="color:#aaa">Not provided</em>'}</span></td></tr>
+     <tr><td style="padding:10px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Access Code</span><strong style="font-size:18px;color:#b07000;font-family:'Courier New',monospace;letter-spacing:3px">${code}</strong></td></tr>
+     <tr><td style="padding:6px 0;border-bottom:1px solid #f0f0f0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Status</span><span style="font-size:12px;color:${isNew?'#1a6a1a':'#1a1a6a'};font-weight:700">${isNew?'✅ New Registration':'↩️ Returning Login'}</span></td></tr>
+     <tr><td style="padding:6px 0"><span style="color:#999;font-size:11px;display:inline-block;width:110px">Device</span><span style="font-size:10px;color:#888">${navigator.userAgent.substring(0,120)}</span></td></tr>
+   </table>
+ </td></tr>
+ <tr><td style="background:#f8f8f8;padding:14px 28px;border-top:1px solid #eee">
+   <p style="font-size:11px;color:#aaa;margin:0">Kharch App · Founder: Bhavin Gojiya · contact.becreatif@gmail.com</p>
+ </td></tr>
+</table>
+</body></html>`;
+}
+
+async function sendEmails(name, userEmail, code, since, isNew){
+  // Show warning in console if not configured, but don't block the app
+  if(!isEJSConfigured()){
+    console.warn(
+      '%c[Kharch Email] EmailJS not configured yet.\n' +
+      'Edit the EJS_PUBLIC_KEY, EJS_SERVICE_ID, EJS_TPL_WELCOME, EJS_TPL_ADMIN\n' +
+      'constants in the script. See setup instructions in the code comments.',
+      'color:#e8a000;font-size:12px'
+    );
+    return;
+  }
+
+  initEJS();
+
+  const params_welcome = {
+    to_email:     userEmail,
+    to_name:      name,
+    user_code:    code,
+    member_since: since,
+    message_html: buildWelcomeEmail(name, code),
+    subject:      `Welcome to Kharch, ${name}! Your Access Code: ${code}`,
+  };
+
+  const params_admin = {
+    to_email:     'contact.becreatif@gmail.com',
+    to_name:      'Bhavin Gojiya',
+    user_name:    name,
+    user_email:   userEmail || 'Not provided',
+    user_code:    code,
+    is_new:       isNew ? 'YES — New Registration' : 'No — Returning Login',
+    login_time:   new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),
+    message_html: buildAdminEmail(name, userEmail, code, isNew),
+  };
+
+  try{
+    // 1) Welcome email → user (only on first signup)
+    if(userEmail && isNew){
+      const r1 = await emailjs.send(EJS_SERVICE_ID, EJS_TPL_WELCOME, params_welcome);
+      console.log('%c[Kharch] ✅ Welcome email sent to ' + userEmail, 'color:green');
+    }
+    // 2) Admin notification → contact.becreatif@gmail.com (always)
+    const r2 = await emailjs.send(EJS_SERVICE_ID, EJS_TPL_ADMIN, params_admin);
+    console.log('%c[Kharch] ✅ Admin notification sent', 'color:green');
+  } catch(err){
+    console.error('[Kharch] ❌ Email error:', err);
+  }
+}
+
+// ── TEST EMAIL (call testEmail() in browser console to verify) ──
+async function testEmail(){
+  if(!isEJSConfigured()){ alert('⚠️ EmailJS not configured yet.\nSee the EJS_* constants at the top of the script.'); return; }
+  initEJS();
+  try{
+    await emailjs.send(EJS_SERVICE_ID, EJS_TPL_ADMIN, {
+      to_email:     'contact.becreatif@gmail.com',
+      to_name:      'Bhavin Gojiya',
+      user_name:    'TEST USER',
+      user_email:   'test@test.com',
+      user_code:    'TEST-0000',
+      is_new:       'YES — Test Submission',
+      login_time:   new Date().toLocaleString('en-IN'),
+      message_html: '<h2>✅ Test email from Kharch App working!</h2><p>EmailJS is configured correctly.</p>',
+    });
+    alert('✅ Test email sent! Check contact.becreatif@gmail.com inbox.');
+  } catch(e){
+    alert('❌ Test failed: ' + JSON.stringify(e));
+  }
+}
+
+
 
 function doLogout(){
   currentUser=null;entries=[];drafts=[];emis=[];
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('app-screen').classList.remove('visible');
   document.getElementById('app-footer').style.display='none';
-  document.getElementById('login-name').value='';
+  document.getElementById('mob-nav').style.display='none';
+  if(document.getElementById('login-fname')) document.getElementById('login-fname').value='';
+  if(document.getElementById('login-phone')) document.getElementById('login-phone').value='';
+  if(document.getElementById('login-email')) document.getElementById('login-email').value='';
+  if(document.getElementById('login-code')) document.getElementById('login-code').value='';
+  switchLoginTab('new');
+  renderPrev();
   if(barChart){barChart.destroy();barChart=null;}
   if(donutChart){donutChart.destroy();donutChart=null;}
   renderPrev();
@@ -932,6 +1780,11 @@ function goPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(`page-${id}`).classList.add('active');
+  if(el)el.classList.add('active');
+}
+function setMobNav(id){
+  document.querySelectorAll('.mob-nav-item').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(`mn-${id}`);
   if(el)el.classList.add('active');
 }
 
@@ -989,7 +1842,7 @@ function submitEntry(){
   if(eDraftId){drafts=drafts.filter(d=>d.id!==eDraftId);saveDrafts2();}
   const entry={id:Date.now(),desc,amount,type:cType,pay:cPay,category:document.getElementById('f-cat').value,date:date||new Date().toISOString().split('T')[0],note:document.getElementById('f-note').value.trim()};
   entries.unshift(entry);saveEntries();closeModal(true);render();
-  showToast(`✅ ${cType==='expense'?'Expense':cType==='income'?'Income':'Investment'} added!`,'ok');
+  showToast(cType==='expense'?t('toast_added_exp'):cType==='income'?t('toast_added_inc'):t('toast_added_inv'),'ok');
 }
 function delEntry(id){entries=entries.filter(e=>e.id!==id);saveEntries();render();showToast('🗑️ Deleted','warn');}
 
@@ -1395,8 +2248,9 @@ function showToast(msg,type='ok'){
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
+applyLangOnLoad();
 renderPrev();
-document.getElementById('login-name').focus();
+if(document.getElementById('login-fname')) document.getElementById('login-fname').focus();
 updateMonthDisplay();
 </script>
 </body>
