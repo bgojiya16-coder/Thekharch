@@ -65,10 +65,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .login-divider{text-align:center;font-size:10px;color:var(--muted2);margin:20px 0;letter-spacing:0.1em;text-transform:uppercase;position:relative;}
 .login-divider::before,.login-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);}
 .login-divider::before{left:0}.login-divider::after{right:0}
-.prev-users{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
-.prev-pill{padding:7px 14px;border-radius:20px;background:var(--s3);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px;}
-.prev-pill:hover{border-color:var(--accent);color:var(--accent);}
-.prev-pill .av{width:20px;height:20px;border-radius:50%;background:var(--accent);color:#08090d;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+
 .login-note{margin-top:24px;text-align:center;font-size:10px;color:var(--muted2);line-height:1.6;}
 
 /* ══════════════════════════════
@@ -430,25 +427,17 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 /* ── LOGIN TABS ── */
 
-
 /* user code display */
-.ucode-box{
   background:var(--s3);border:1.5px dashed var(--accent);border-radius:14px;
   padding:18px 20px;text-align:center;margin-top:18px;
 }
-.ucode-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:8px;}
-.ucode-val{
   font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);
   letter-spacing:4px;margin-bottom:12px;word-break:break-all;
 }
-.ucode-actions{display:flex;gap:8px;justify-content:center;}
-.ucode-btn{
   padding:8px 16px;border-radius:9px;border:1px solid var(--border2);
   background:var(--s4);color:var(--text);font-family:var(--sans);font-size:11px;
   font-weight:700;cursor:pointer;transition:all 0.15s;
 }
-.ucode-btn:hover{background:var(--accent);color:#08090d;border-color:var(--accent);}
-.ucode-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.6;}
 
 /* code input tab */
 .code-input-wrap{position:relative;}
@@ -543,11 +532,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <span id="login-btn-text" data-i18n="login_btn">Enter Dashboard</span> <span id="login-btn-arrow">→</span>
         </button>
 
-        <!-- Previous users -->
-        <div id="prev-section" style="display:none">
-          <div class="login-divider" data-i18n="login_switch">or switch account</div>
-          <div class="prev-users" id="prev-users"></div>
-        </div>
       </div>
 
     </div>
@@ -573,7 +557,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <div class="sb-uname" id="sb-name">Ravi</div>
           <div class="sb-usince" id="sb-since">Member</div>
         </div>
-        <button class="sb-logout" onclick="showMyCode()" title="Show my code" style="margin-right:4px">🔑</button>
         <button class="sb-logout" onclick="doLogout()" title="Switch account">⏏</button>
       </div>
     </div>
@@ -817,24 +800,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 </div>
 
 <!-- USER CODE MODAL -->
-<div class="overlay" id="usercode-modal">
-  <div class="modal" style="width:420px;text-align:center">
-    <div style="font-size:48px;margin-bottom:12px">🎉</div>
-    <h3 style="font-family:var(--display);font-size:22px;margin-bottom:8px" data-i18n="code_modal_title">Your Access Code</h3>
-    <p style="color:var(--muted);font-size:12px;line-height:1.7;margin-bottom:20px" data-i18n="code_modal_sub">Save this code! Use it to log in from any browser or device and access your data.</p>
-    <div class="ucode-box">
-      <div class="ucode-label" data-i18n="code_modal_label">Your Unique Code</div>
-      <div class="ucode-val" id="modal-code-val">----</div>
-      <div class="ucode-actions">
-        <button class="ucode-btn" onclick="copyCode()" data-i18n="code_copy">📋 Copy Code</button>
-        <button class="ucode-btn" onclick="shareCode()" data-i18n="code_share">📤 Share</button>
-      </div>
-      <div class="ucode-hint" data-i18n="code_modal_hint">Keep this code private. Anyone with this code can access your finance data.</div>
-    </div>
-    <button class="login-btn" style="margin-top:20px;width:100%" onclick="closeCodeModal()" data-i18n="code_modal_go">Go to Dashboard →</button>
-  </div>
-</div>
-
 <!-- EMI MODAL -->
 <div class="overlay" id="emi-modal" onclick="if(event.target===this)closeEmiModal()">
   <div class="modal" style="width:500px">
@@ -954,19 +919,7 @@ const LANG = {
     login_phone_ph:'e.g. 9876543210',
     login_placeholder:'e.g. Ravi Sharma',
     login_btn:'Enter Dashboard',
-    login_switch:'or switch account',
     login_note:'🔒 Data stored locally in your browser · No signup required',
-    code_sub:'Enter your 8-character access code to restore your data on this device.',
-    code_label:'Your Access Code',
-    code_btn:'Access My Data',
-    code_hint:'💡 Your code was shown after you first signed in. Check the app on your original device.',
-    code_modal_title:'Your Access Code',
-    code_modal_sub:'Save this code! Use it to log in from any browser or device and access your data.',
-    code_modal_label:'Your Unique Code',
-    code_copy:'📋 Copy Code',
-    code_share:'📤 Share',
-    code_modal_hint:'Keep this code private. Anyone with this code can access your finance data.',
-    code_modal_go:'Go to Dashboard →',
     // Nav
     nav_pages:'Pages',
     nav_dashboard:'Dashboard',
@@ -1083,19 +1036,7 @@ const LANG = {
     login_phone_ph:'દા.ત. 9876543210',
     login_placeholder:'દા.ત. રવિ શર્મા',
     login_btn:'ડૅશબોર્ડ ખોલો',
-    login_switch:'અથવા એકાઉન્ટ બદલો',
     login_note:'🔒 ડેટા તમારા બ્રાઉઝરમાં સ્ટોર છે · સાઇનઅપ જરૂરી નથી',
-    code_sub:'તમારો 8-અક્ષરનો એક્સેસ કોડ દાખલ કરો.',
-    code_label:'તમારો એક્સેસ કોડ',
-    code_btn:'મારો ડેટા ખોલો',
-    code_hint:'💡 તમારો કોડ પ્રથમ સાઇન-ઇન પછી બતાવ્યો હતો.',
-    code_modal_title:'તમારો એક્સેસ કોડ',
-    code_modal_sub:'આ કોડ સાચવો! કોઈ પણ બ્રાઉઝર અથવા ડિવાઇસ પર ઉપયોગ કરો.',
-    code_modal_label:'તમારો અનોખો કોડ',
-    code_copy:'📋 કોડ કૉપિ કરો',
-    code_share:'📤 શૅર કરો',
-    code_modal_hint:'આ કોડ ખાનગી રાખો. આ કોડ ધરાવનાર કોઈ પણ વ્યક્તિ તમારો ડેટા ઍક્સેસ કરી શકે.',
-    code_modal_go:'ડૅશબોર્ડ પર જાઓ →',
     // Nav
     nav_pages:'પૃષ્ઠો',
     nav_dashboard:'ડૅશબોર્ડ',
@@ -1294,70 +1235,32 @@ function nextTip(){showTip(tipIdx+1);}
 function prevTip(){showTip(tipIdx-1);}
 
 // ══════════════════════════════════════════
-// LOGIN — First Name → User Code
+// LOGIN — Name-based, auto-saved & auto-restored
 // ══════════════════════════════════════════
-function getUsers(){return JSON.parse(localStorage.getItem('kharch_users')||'[]');}
-function saveUsers(u){localStorage.setItem('kharch_users',JSON.stringify(u));}
-function skey(code,t){return`kharch_${code}_${t}`;}
-
-/** Generate a deterministic 8-char code from first name + phone
- *  Format: RAVI-A3F7  (first 4 chars of name + dash + 4 hex chars from phone hash)
- */
-function generateCode(firstName){
-  const name = firstName.trim().toUpperCase().replace(/[^A-Z]/g,'').substring(0,4).padEnd(4,'X');
-  // Random 4 hex chars seeded by name + timestamp
-  let hash = Date.now();
-  for(let i=0;i<name.length;i++) hash = ((hash<<5)-hash) + name.charCodeAt(i) | 0;
-  const hex = Math.abs(hash).toString(16).toUpperCase().padStart(4,'0').substring(0,4);
-  return `${name}-${hex}`;
-}
-
-
-function renderPrev(){
-  const users = getUsers();
-  const sec = document.getElementById('prev-section');
-  const ul = document.getElementById('prev-users');
-  if(!users.length){sec.style.display='none';return;}
-  sec.style.display='block';
-  ul.innerHTML = users.map(u=>`<div class="prev-pill" onclick="quickLogin('${u.code}','${u.displayName}')"><div class="av">${u.displayName[0].toUpperCase()}</div>${u.displayName}</div>`).join('');
-}
+function skey(name, t){ return `kharch_${name}_${t}`; }
+function getSavedUser(){ return localStorage.getItem('kharch_current_user'); }
+function setSavedUser(name){ localStorage.setItem('kharch_current_user', name); }
 
 function doLogin(){
   const fname = (document.getElementById('login-fname').value||'').trim();
   if(!fname || fname.length < 2){showToast('⚠️ Enter your first name (min 2 chars)','warn');return;}
-  const code = generateCode(fname);
-  const users = getUsers();
-  const isNew = !users.find(u=>u.code===code);
-  loginAs(code, fname, '', isNew);
+  loginAs(fname);
 }
 
+function loginAs(displayName){
+  currentUser = displayName;
+  setSavedUser(displayName);
 
-function quickLogin(code, displayName){
-  loginAs(code, displayName, '', false);
-}
-
-let _pendingCodeModal = false;
-
-function loginAs(code, displayName, email='', isNew=false, fromCode=false){
-  currentUser = code;
-  let users = getUsers();
-  const existing = users.find(u=>u.code===code);
-  const sinceStr = existing ? existing.since : new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
-  const userEmail = email || (existing && existing.email) || '';
-  if(!existing){
-    users.unshift({code, displayName, email:userEmail, since:sinceStr, loginTime:new Date().toISOString()});
-    if(users.length>10) users=users.slice(0,10);
-    saveUsers(users);
-  } else {
-    existing.lastLogin = new Date().toISOString();
-    if(displayName && displayName!==existing.displayName) existing.displayName=displayName;
-    if(userEmail && !existing.email) existing.email=userEmail;
-    saveUsers(users);
+  const sinceKey = skey(displayName, 'since');
+  let sinceStr = localStorage.getItem(sinceKey);
+  if(!sinceStr){
+    sinceStr = new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+    localStorage.setItem(sinceKey, sinceStr);
   }
 
-  entries = JSON.parse(localStorage.getItem(skey(code,'entries'))||'[]');
-  drafts  = JSON.parse(localStorage.getItem(skey(code,'drafts'))||'[]');
-  emis    = JSON.parse(localStorage.getItem(skey(code,'emis'))||'[]');
+  entries = JSON.parse(localStorage.getItem(skey(displayName,'entries'))||'[]');
+  drafts  = JSON.parse(localStorage.getItem(skey(displayName,'drafts'))||'[]');
+  emis    = JSON.parse(localStorage.getItem(skey(displayName,'emis'))||'[]');
 
   const init = displayName[0].toUpperCase();
   document.getElementById('sb-av').textContent = init;
@@ -1378,59 +1281,19 @@ function loginAs(code, displayName, email='', isNew=false, fromCode=false){
   buildInvestPage();
   renderEmis();
   render();
-
-  // Show code modal only for brand-new users
-  if(isNew){
-    document.getElementById('modal-code-val').textContent = code;
-    document.getElementById('usercode-modal').classList.add('open');
-  } else {
-    showToast(`${t('toast_welcome')}${displayName.split(' ')[0]}!`,'ok');
-  }
+  showToast(`${t('toast_welcome')}${displayName.split(' ')[0]}!`,'ok');
 }
-
-function closeCodeModal(){
-  document.getElementById('usercode-modal').classList.remove('open');
-  showToast(`${t('toast_welcome')}${currentUser.split('-')[0]}!`,'ok');
-}
-
-let _copyTimeout;
-function copyCode(){
-  const code = document.getElementById('modal-code-val').textContent;
-  navigator.clipboard.writeText(code).then(()=>{
-    showToast('📋 Code copied!','ok');
-  }).catch(()=>{
-    // fallback
-    const el=document.createElement('textarea');el.value=code;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
-    showToast('📋 Code copied!','ok');
-  });
-}
-function shareCode(){
-  const code = document.getElementById('modal-code-val').textContent;
-  const txt = `My Kharch access code: ${code}\nUse this to log into your finance tracker on any device.`;
-  if(navigator.share){navigator.share({title:'My Kharch Code',text:txt}).catch(()=>{});}
-  else{navigator.clipboard.writeText(txt).then(()=>showToast('📋 Copied to clipboard!','ok'));}
-}
-
-// Show user code from inside the app (sidebar or profile)
-function showMyCode(){
-  if(!currentUser) return;
-  document.getElementById('modal-code-val').textContent = currentUser;
-  document.getElementById('usercode-modal').classList.add('open');
-}
-
-
 
 function doLogout(){
   currentUser=null;entries=[];drafts=[];emis=[];
+  localStorage.removeItem('kharch_current_user');
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('app-screen').classList.remove('visible');
   document.getElementById('app-footer').style.display='none';
   document.getElementById('mob-nav').style.display='none';
   if(document.getElementById('login-fname')) document.getElementById('login-fname').value='';
-  renderPrev();
   if(barChart){barChart.destroy();barChart=null;}
   if(donutChart){donutChart.destroy();donutChart=null;}
-  renderPrev();
 }
 
 // ══════════════════════════════════════════
@@ -1924,9 +1787,14 @@ function showToast(msg,type='ok'){
 // INIT
 // ══════════════════════════════════════════
 applyLangOnLoad();
-renderPrev();
-if(document.getElementById('login-fname')) document.getElementById('login-fname').focus();
 updateMonthDisplay();
+// Auto-restore login if user was previously logged in
+const _saved = getSavedUser();
+if(_saved){
+  loginAs(_saved);
+} else {
+  if(document.getElementById('login-fname')) document.getElementById('login-fname').focus();
+}
 </script>
 </body>
 </html>
