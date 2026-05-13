@@ -427,18 +427,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
 /* ── LOGIN TABS ── */
 
-/* user code display */
-  background:var(--s3);border:1.5px dashed var(--accent);border-radius:14px;
-  padding:18px 20px;text-align:center;margin-top:18px;
-}
-  font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);
-  letter-spacing:4px;margin-bottom:12px;word-break:break-all;
-}
-  padding:8px 16px;border-radius:9px;border:1px solid var(--border2);
-  background:var(--s4);color:var(--text);font-family:var(--sans);font-size:11px;
-  font-weight:700;cursor:pointer;transition:all 0.15s;
-}
-
 /* code input tab */
 .code-input-wrap{position:relative;}
 .code-input-wrap input{text-transform:uppercase;letter-spacing:3px;font-family:var(--mono);font-size:18px;font-weight:700;text-align:center;}
@@ -572,7 +560,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="sst-row"><span class="sst-label">GPay</span><span class="sst-val" id="ss-g" style="color:var(--blue)">₹0</span></div>
       <div class="sst-row"><span class="sst-label">PhonePe</span><span class="sst-val" id="ss-p" style="color:var(--purple)">₹0</span></div>
       <div class="sst-row"><span class="sst-label">Cash</span><span class="sst-val" id="ss-c" style="color:var(--green)">₹0</span></div>
+      <div class="sst-row"><span class="sst-label" style="color:var(--muted2)">Other Digital</span><span class="sst-val" id="ss-o" style="color:var(--orange)">₹0</span></div>
       <div class="sst-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border)"><span class="sst-label">Entries</span><span class="sst-val" id="ss-n" style="color:var(--accent)">0</span></div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;">
+        <button onclick="exportData()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:var(--s3);border:1px solid var(--border2);color:var(--text);border-radius:9px;padding:7px 10px;font-family:var(--sans);font-size:11px;font-weight:600;cursor:pointer;width:100%;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text)'">📤 Export Data</button>
+        <button onclick="document.getElementById('import-file-input').click()" style="display:flex;align-items:center;justify-content:center;gap:5px;background:var(--s3);border:1px solid var(--border2);color:var(--text);border-radius:9px;padding:7px 10px;font-family:var(--sans);font-size:11px;font-weight:600;cursor:pointer;width:100%;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent2)';this.style.color='var(--accent2)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text)'">📥 Import Data</button>
+        <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="importData(this)">
+      </div>
     </div>
     <div class="sb-month">
       <div class="sb-month-label">Period</div>
@@ -643,6 +637,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
             <div class="pay-row"><div class="pay-dot" style="background:var(--blue)"></div><span class="pay-name">GPay</span><span class="pay-amt" id="pl-g">₹0</span><span class="pay-pct" id="pl-gp">0%</span></div>
             <div class="pay-row"><div class="pay-dot" style="background:var(--purple)"></div><span class="pay-name">PhonePe</span><span class="pay-amt" id="pl-p">₹0</span><span class="pay-pct" id="pl-pp">0%</span></div>
             <div class="pay-row"><div class="pay-dot" style="background:var(--green)"></div><span class="pay-name">Cash</span><span class="pay-amt" id="pl-c">₹0</span><span class="pay-pct" id="pl-cp">0%</span></div>
+            <div class="pay-row"><div class="pay-dot" style="background:var(--orange)"></div><span class="pay-name">Other</span><span class="pay-amt" id="pl-o">₹0</span><span class="pay-pct" id="pl-op">0%</span></div>
           </div>
         </div>
         <div class="card">
@@ -784,11 +779,17 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
       <div class="fg">
         <label>Payment Method</label>
-        <div class="pay-toggle">
-          <div class="ptb ag" id="pt-gpay" onclick="setPay('gpay')"><span class="pi">G</span>GPay</div>
-          <div class="ptb" id="pt-phonepay" onclick="setPay('phonepay')"><span class="pi">P</span>PhonePe</div>
-          <div class="ptb" id="pt-cash" onclick="setPay('cash')"><span class="pi">💵</span>Cash</div>
-        </div>
+        <select id="f-pay" onchange="setPay(this.value)" style="background:var(--s3);border:1.5px solid var(--border);color:var(--text);border-radius:var(--r2);padding:12px 16px;font-family:var(--sans);font-size:14px;font-weight:600;outline:none;width:100%;cursor:pointer;transition:border-color 0.2s;">
+          <option value="gpay">🔵 GPay</option>
+          <option value="phonepay">🟣 PhonePe</option>
+          <option value="cash">💵 Cash</option>
+          <option value="paytm">🔷 Paytm</option>
+          <option value="cred">⚡ CRED</option>
+          <option value="creditcard">💳 Credit Card</option>
+          <option value="debitcard">🏧 Debit Card</option>
+          <option value="netbanking">🌐 Net Banking</option>
+          <option value="upi">📲 UPI (Other)</option>
+        </select>
       </div>
       <div class="fg"><label>Note (optional)</label><textarea id="f-note" placeholder="Any note…" oninput="autoDraft()"></textarea></div>
       <div style="display:flex;gap:8px">
@@ -1354,7 +1355,8 @@ function closeModal(saved=true){
 function resetForm(){
   ['f-desc','f-amt','f-note'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-cat').value='Food & Dining';
-  cType='expense';cPay='gpay';setType('expense');setPay('gpay');
+  cType='expense';cPay='gpay';setType('expense');
+  const sel=document.getElementById('f-pay');if(sel)sel.value='gpay';
 }
 function setType(t){
   cType=t;
@@ -1367,9 +1369,8 @@ function setType(t){
 }
 function setPay(p){
   cPay=p;
-  ['gpay','phonepay','cash'].forEach(x=>document.getElementById(`pt-${x}`).className='ptb');
-  const map={gpay:'ag',phonepay:'ap',cash:'ac'};
-  document.getElementById(`pt-${p}`).classList.add(map[p]);
+  const sel=document.getElementById('f-pay');
+  if(sel&&sel.value!==p)sel.value=p;
 }
 function submitEntry(){
   const desc=document.getElementById('f-desc').value.trim();
@@ -1451,20 +1452,24 @@ function render(){
   const gA=exps.filter(e=>e.pay==='gpay').reduce((s,e)=>s+e.amount,0);
   const pA=exps.filter(e=>e.pay==='phonepay').reduce((s,e)=>s+e.amount,0);
   const cA=exps.filter(e=>e.pay==='cash').reduce((s,e)=>s+e.amount,0);
-  const pT=gA+pA+cA;
+  const oA=exps.filter(e=>!['gpay','phonepay','cash'].includes(e.pay)).reduce((s,e)=>s+e.amount,0);
+  const pT=gA+pA+cA+oA;
   document.getElementById('ss-g').textContent=fmt(gA);
   document.getElementById('ss-p').textContent=fmt(pA);
   document.getElementById('ss-c').textContent=fmt(cA);
+  document.getElementById('ss-o').textContent=fmt(oA);
   document.getElementById('ss-n').textContent=me.length;
   document.getElementById('d-total').textContent=fmt(pT);
   document.getElementById('pl-g').textContent=fmt(gA);
   document.getElementById('pl-p').textContent=fmt(pA);
   document.getElementById('pl-c').textContent=fmt(cA);
+  document.getElementById('pl-o').textContent=fmt(oA);
   const pp=n=>pT?Math.round(n/pT*100)+'%':'0%';
   document.getElementById('pl-gp').textContent=pp(gA);
   document.getElementById('pl-pp').textContent=pp(pA);
   document.getElementById('pl-cp').textContent=pp(cA);
-  updateDonut([gA,pA,cA]);
+  document.getElementById('pl-op').textContent=pp(oA);
+  updateDonut([gA,pA,cA,oA]);
   const catMap={};
   exps.forEach(e=>{catMap[e.category]=(catMap[e.category]||0)+e.amount;});
   const sorted=Object.entries(catMap).sort((a,b)=>b[1]-a[1]);
@@ -1487,7 +1492,7 @@ function renderEntries(){
   else if(cFilter==='cash')f=me.filter(e=>e.pay==='cash');
   const list=document.getElementById('entry-list');
   if(!f.length){list.innerHTML=`<div class="empty"><div class="be">🧾</div><p>No entries match this filter.<br>Click <strong>+ Add Entry</strong> to begin.</p></div>`;return;}
-  const PL={gpay:'GPay',phonepay:'PhonePe',cash:'Cash'};
+  const PL={gpay:'GPay',phonepay:'PhonePe',cash:'Cash',paytm:'Paytm',cred:'CRED',creditcard:'Credit Card',debitcard:'Debit Card',netbanking:'Net Banking',upi:'UPI'};
   list.innerHTML=f.map(e=>{const sign=e.type==='income'?'+':'-';const cls=e.type==='income'?'cr':e.type==='investment'?'iv':'dr';return`<div class="ei"><span class="ei-emoji">${CE[e.category]||'📌'}</span><div class="ei-body"><div class="ei-desc">${e.desc}</div><div class="ei-meta"><span>${fmtD(e.date)}</span><span class="ptag ${e.pay}">${PL[e.pay]||e.pay}</span><span>${e.category}</span>${e.type==='investment'?'<span class="ibadge">INVEST</span>':''}${e.note?`<span title="${e.note}">📝</span>`:''}</div></div><span class="ei-amt ${cls}">${sign}${fmt(e.amount)}</span><button class="ei-del" onclick="delEntry(${e.id})">✕</button></div>`;}).join('');
 }
 
@@ -1497,7 +1502,10 @@ function renderEntries(){
 function updateDonut(vals){
   const ctx=document.getElementById('donutChart').getContext('2d');
   if(donutChart)donutChart.destroy();
-  donutChart=new Chart(ctx,{type:'doughnut',data:{labels:['GPay','PhonePe','Cash'],datasets:[{data:vals.every(v=>v===0)?[1,1,1]:vals,backgroundColor:['#4f9eff','#9b72ff','#3de88a'],borderWidth:0,hoverOffset:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ₹${c.raw.toLocaleString('en-IN')}` }}}}});
+  const labels=['GPay','PhonePe','Cash','Other'];
+  const colors=['#4f9eff','#9b72ff','#3de88a','#ff8c42'];
+  const allZero=vals.every(v=>v===0);
+  donutChart=new Chart(ctx,{type:'doughnut',data:{labels,datasets:[{data:allZero?[1,1,1,1]:vals,backgroundColor:colors,borderWidth:0,hoverOffset:4}]},options:{responsive:true,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>allZero?'No data':` ₹${c.raw.toLocaleString('en-IN')}`}}}}});
 }
 function updateBar(){
   const m6=[];for(let i=5;i>=0;i--){const d=new Date(currentMonth.getFullYear(),currentMonth.getMonth()-i,1);m6.push(d);}
@@ -1773,6 +1781,47 @@ function renderEmis(){
 }
 
 function ordinal(n){const s=['th','st','nd','rd'];const v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+
+// ══════════════════════════════════════════
+// BACKUP: EXPORT / IMPORT
+// ══════════════════════════════════════════
+function exportData(){
+  const backup={};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('kharch_'))backup[k]=localStorage.getItem(k);
+  }
+  if(!Object.keys(backup).length){showToast('⚠️ No data to export','warn');return;}
+  const date=new Date().toISOString().slice(0,10);
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`kharch-backup-${date}.json`;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},100);
+  showToast('📤 Backup downloaded!','ok');
+}
+function importData(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(typeof data!=='object'||Array.isArray(data))throw new Error('Invalid structure');
+      const keys=Object.keys(data);
+      if(!keys.length||!keys.every(k=>k.startsWith('kharch_')))throw new Error('No valid kharch_ keys found');
+      if(!confirm(`Import ${keys.length} keys from backup? This will overwrite existing data and reload the app.`)){input.value='';return;}
+      keys.forEach(k=>localStorage.setItem(k,data[k]));
+      showToast('📥 Import successful! Reloading…','ok');
+      setTimeout(()=>location.reload(),1200);
+    }catch(err){
+      showToast('❌ Invalid backup file: '+err.message,'warn');
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
+}
 
 // ══════════════════════════════════════════
 // TOAST
