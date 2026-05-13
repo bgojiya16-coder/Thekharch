@@ -6,6 +6,7 @@
 <title>Kharch — Personal Finance</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --bg:#08090d;--s1:#0e0f15;--s2:#14151d;--s3:#1c1d28;--s4:#252636;
@@ -65,7 +66,10 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .login-divider{text-align:center;font-size:10px;color:var(--muted2);margin:20px 0;letter-spacing:0.1em;text-transform:uppercase;position:relative;}
 .login-divider::before,.login-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);}
 .login-divider::before{left:0}.login-divider::after{right:0}
-
+.prev-users{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.prev-pill{padding:7px 14px;border-radius:20px;background:var(--s3);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+.prev-pill:hover{border-color:var(--accent);color:var(--accent);}
+.prev-pill .av{width:20px;height:20px;border-radius:50%;background:var(--accent);color:#08090d;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
 .login-note{margin-top:24px;text-align:center;font-size:10px;color:var(--muted2);line-height:1.6;}
 
 /* ══════════════════════════════
@@ -386,12 +390,118 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .toggle-switch input:checked+.toggle-slider{background:var(--green);}
 .toggle-switch input:checked+.toggle-slider::before{transform:translateX(16px);background:#fff;}
 
+/* ══════════════════════════════
+   DAILY FIXED EXPENSES PAGE
+══════════════════════════════ */
+.dfe-hero{background:linear-gradient(135deg,rgba(245,200,66,0.12),rgba(255,140,66,0.08));border:1px solid rgba(245,200,66,0.25);border-radius:var(--r3);padding:26px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.dfe-hero::after{content:'🍱';position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:64px;opacity:0.15;pointer-events:none;}
+.dfe-hero h3{font-family:var(--display);font-size:26px;font-weight:600;letter-spacing:-0.5px;margin-bottom:5px;}
+.dfe-hero h3 em{color:var(--gold);font-style:italic;}
+.dfe-hero p{font-size:12px;color:var(--muted);line-height:1.6;max-width:480px;}
+.dfe-summary{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;}
+.dfe-stat{background:var(--s3);border:1px solid var(--border);border-radius:var(--r2);padding:12px 18px;min-width:120px;position:relative;}
+.dfe-stat-ico{position:absolute;right:12px;top:10px;font-size:18px;opacity:0.25;}
+.dfe-stat-val{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--gold);}
+.dfe-stat-lbl{font-size:9px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;}
+.dfe-stat.dfe-green .dfe-stat-val{color:var(--green);}
+.dfe-stat.dfe-blue .dfe-stat-val{color:var(--blue);}
+.dfe-stat.dfe-purple .dfe-stat-val{color:var(--purple);}
+
+/* Fixed items grid */
+.dfe-section-label{font-size:9px;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin:18px 0 10px;display:flex;align-items:center;gap:8px;}
+.dfe-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.dfe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.dfe-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;position:relative;transition:all 0.2s;cursor:default;}
+.dfe-item:hover{border-color:var(--border2);transform:translateY(-2px);}
+.dfe-item.active-today{border-color:rgba(245,200,66,0.4);background:rgba(245,200,66,0.04);}
+.dfe-item-stripe{position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r2) var(--r2) 0 0;}
+.dfe-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.dfe-item-icon{font-size:22px;}
+.dfe-item-del{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:12px;padding:3px;border-radius:5px;transition:all 0.15s;line-height:1;}
+.dfe-item-del:hover{color:var(--red);background:rgba(255,79,109,0.1);}
+.dfe-item-name{font-size:13px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dfe-item-price{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--gold);}
+.dfe-item-freq{font-size:10px;color:var(--muted);margin-top:3px;}
+.dfe-item-monthly{font-size:10px;color:var(--muted);font-family:var(--mono);}
+.dfe-item-actions{display:flex;gap:5px;margin-top:10px;}
+.dfe-mark-btn{flex:1;padding:6px;border-radius:7px;border:1px solid rgba(61,232,138,0.3);background:rgba(61,232,138,0.07);color:var(--green);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:var(--sans);}
+.dfe-mark-btn:hover{background:rgba(61,232,138,0.18);border-color:var(--green);}
+.dfe-mark-btn.marked{background:rgba(61,232,138,0.15);border-color:var(--green);color:var(--green);}
+.dfe-mark-btn.unmark{background:rgba(255,79,109,0.07);border:1px solid rgba(255,79,109,0.3);color:var(--red);}
+.dfe-mark-btn.unmark:hover{background:rgba(255,79,109,0.15);}
+.dfe-add-entry-btn{padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted);font-size:11px;cursor:pointer;transition:all 0.15s;}
+.dfe-add-entry-btn:hover{border-color:var(--accent);color:var(--accent);}
+.dfe-empty{text-align:center;padding:40px 20px;color:var(--muted);grid-column:1/-1;}
+.dfe-empty-ico{font-size:44px;margin-bottom:10px;}
+.dfe-empty p{font-size:12px;line-height:1.8;}
+
+/* Today's log */
+.dfe-log{display:flex;flex-direction:column;gap:6px;}
+.dfe-log-item{display:flex;align-items:center;gap:10px;background:var(--s3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;animation:eiIn 0.3s ease;}
+.dfe-log-ico{font-size:18px;flex-shrink:0;}
+.dfe-log-body{flex:1;min-width:0;}
+.dfe-log-name{font-size:12px;font-weight:700;}
+.dfe-log-meta{font-size:10px;color:var(--muted);margin-top:2px;}
+.dfe-log-amt{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--gold);}
+
+/* DFE counter badge */
+.dfe-count-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.25);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--gold);font-family:var(--mono);}
+
+/* Add DFE Modal */
+.dfe-modal-ico-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:6px;}
+.dfe-ico-btn{padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--s3);cursor:pointer;font-size:16px;text-align:center;transition:all 0.15s;}
+.dfe-ico-btn:hover,.dfe-ico-btn.sel{border-color:var(--gold);background:rgba(245,200,66,0.1);}
+.freq-toggle{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.ftb{padding:8px 4px;border-radius:9px;border:1px solid var(--border);background:var(--s3);color:var(--muted);cursor:pointer;font-family:var(--sans);font-size:10px;font-weight:700;text-align:center;transition:all 0.15s;}
+.ftb:hover{border-color:var(--border2);color:var(--text);}
+.ftb.af{background:rgba(245,200,66,0.12);border-color:var(--gold);color:var(--gold);}
+
+/* progress ring */
+.dfe-ring-wrap{position:relative;width:90px;height:90px;flex-shrink:0;}
+.dfe-ring-wrap svg{transform:rotate(-90deg);}
+.dfe-ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.dfe-ring-val{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--gold);line-height:1;}
+.dfe-ring-lbl{font-size:8px;color:var(--muted);margin-top:2px;font-family:var(--mono);}
+
+/* Entry count pill on dashboard */
+.entries-counter{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(232,255,90,0.1),rgba(90,255,212,0.08));border:1px solid rgba(232,255,90,0.2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;font-family:var(--mono);color:var(--accent);margin-left:10px;}
+
+
+
+/* Creative streak indicator */
+.streak-bar{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r2);padding:12px 16px;margin-bottom:14px;}
+.streak-ico{font-size:22px;}
+.streak-info{flex:1;}
+.streak-title{font-size:12px;font-weight:700;margin-bottom:2px;}
+.streak-sub{font-size:10px;color:var(--muted);}
+.streak-days{display:flex;gap:4px;}
+.streak-day{width:22px;height:22px;border-radius:5px;border:1px solid var(--border);background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--mono);color:var(--muted2);}
+.streak-day.done{background:rgba(245,200,66,0.2);border-color:var(--gold);color:var(--gold);}
+.streak-day.today-cell{border-color:var(--accent);color:var(--accent);}
+
 /* ── FOOTER ── */
 .app-footer{text-align:center;padding:20px;border-top:1px solid var(--border);margin-top:auto;background:var(--s1);}
 .app-footer-text{font-size:11px;color:var(--muted2);line-height:1.8;}
 .app-footer-text strong{color:var(--muted);font-family:var(--mono);}
 .app-footer-text .footer-brand{color:var(--accent);font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:-0.3px;}
 .app-footer-text .footer-heart{color:var(--red);}
+
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;background:var(--s1);border-top:1px solid var(--border);padding:6px 4px calc(6px + env(safe-area-inset-bottom));backdrop-filter:blur(16px);}
+.mobile-nav-inner{display:flex;align-items:stretch;justify-content:space-around;gap:2px;}
+.mnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;border-radius:12px;cursor:pointer;border:none;background:none;color:var(--muted);transition:all 0.18s;min-width:0;-webkit-tap-highlight-color:transparent;}
+.mnav-item:active{transform:scale(0.92);}
+.mnav-item.active{color:var(--accent);}
+.mnav-item.active .mnav-bg{background:rgba(232,255,90,0.1);}
+.mnav-bg{position:absolute;inset:0;border-radius:12px;transition:background 0.18s;}
+.mnav-ico{font-size:22px;line-height:1;position:relative;z-index:1;}
+.mnav-label{font-size:9px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.04em;line-height:1;position:relative;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;}
+.mnav-item.active .mnav-label{color:var(--accent);}
+.mnav-item-wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:12px;transition:all 0.18s;}
+
+/* Active indicator pill */
+.mnav-pill{position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:3px;border-radius:0 0 3px 3px;background:var(--accent);opacity:0;transition:opacity 0.18s;}
+.mnav-item.active .mnav-pill{opacity:1;}
 
 @media(max-width:900px){
   #app-screen.visible{grid-template-columns:1fr;}
@@ -402,99 +512,21 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   .emi-grid{grid-template-columns:1fr;}
   .emi-hero{flex-direction:column;align-items:flex-start;}
   .emi-summary{flex-wrap:wrap;}
-  .main{padding-bottom:70px;} /* space for bottom nav */
-  .app-footer{margin-bottom:70px;}
+  .dfe-grid{grid-template-columns:repeat(2,1fr);}
+  .mobile-nav{display:block;}
+  .main{padding-bottom:80px;}
 }
-
-/* ── LANGUAGE TOGGLE ── */
-.lang-toggle{
-  display:flex;align-items:center;gap:3px;
-  background:var(--s3);border:1px solid var(--border);
-  border-radius:20px;padding:3px;
-  flex-shrink:0;
-}
-.lang-btn{
-  padding:4px 11px;border-radius:16px;border:none;cursor:pointer;
-  font-family:var(--sans);font-size:11px;font-weight:700;
-  background:none;color:var(--muted);transition:all 0.18s;
-  line-height:1.3;
-}
-.lang-btn.active{background:var(--accent);color:#08090d;}
-.lang-btn:not(.active):hover{color:var(--text);}
-
-/* login lang toggle */
-.login-lang{position:absolute;top:18px;right:20px;z-index:3;}
-
-/* ── LOGIN TABS ── */
-
-/* user code display */
-  background:var(--s3);border:1.5px dashed var(--accent);border-radius:14px;
-  padding:18px 20px;text-align:center;margin-top:18px;
-}
-  font-family:var(--mono);font-size:28px;font-weight:700;color:var(--accent);
-  letter-spacing:4px;margin-bottom:12px;word-break:break-all;
-}
-  padding:8px 16px;border-radius:9px;border:1px solid var(--border2);
-  background:var(--s4);color:var(--text);font-family:var(--sans);font-size:11px;
-  font-weight:700;cursor:pointer;transition:all 0.15s;
-}
-
-/* code input tab */
-.code-input-wrap{position:relative;}
-.code-input-wrap input{text-transform:uppercase;letter-spacing:3px;font-family:var(--mono);font-size:18px;font-weight:700;text-align:center;}
-
-.mob-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;
-  background:var(--s1);
-  border-top:1px solid var(--border2);
-  z-index:500;
-  padding:0 4px env(safe-area-inset-bottom,0px);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-}
-.mob-nav-inner{
-  display:flex;align-items:stretch;
-  height:60px;
-  gap:2px;
-}
-.mob-nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;cursor:pointer;padding:6px 4px;
-  color:var(--muted);font-size:9px;font-weight:700;
-  letter-spacing:0.04em;text-transform:uppercase;
-  border:none;background:none;
-  border-radius:10px;
-  transition:all 0.15s;
-  font-family:var(--sans);
-}
-.mob-nav-item .mn-ico{font-size:20px;line-height:1;}
-.mob-nav-item:hover,.mob-nav-item.active{color:var(--accent);}
-.mob-nav-item.active .mn-ico{filter:drop-shadow(0 0 6px rgba(232,255,90,0.5));}
-
-/* Centre FAB — split add button */
-.mob-fab-wrap{
-  flex:0 0 auto;width:130px;
-  display:flex;align-items:center;justify-content:center;
-  padding:8px 4px;gap:5px;
-}
-.mob-fab{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  height:44px;border-radius:12px;
-  border:none;cursor:pointer;font-family:var(--sans);font-size:9px;font-weight:800;
-  letter-spacing:0.03em;text-transform:uppercase;transition:all 0.2s;
-}
-.mob-fab.fab-entry{background:var(--accent);color:#08090d;}
-.mob-fab.fab-emi{background:rgba(255,79,109,0.15);color:var(--red);border:1px solid rgba(255,79,109,0.35);}
-.mob-fab .fab-ico{font-size:16px;line-height:1;}
-.mob-fab:active{transform:scale(0.93);}
-
-@media(max-width:900px){.mob-nav{display:block;}}
 @media(max-width:600px){
   .page{padding:14px;}
   .metrics{grid-template-columns:1fr 1fr;}
   .topbar{flex-direction:column;align-items:flex-start;gap:10px;}
   .topbar-right{width:100%;overflow-x:auto;}
+  .dfe-grid{grid-template-columns:1fr 1fr;}
+  .mnav-label{font-size:8px;}
+}
+@media(max-width:380px){
+  .mnav-ico{font-size:20px;}
+  .mnav-label{font-size:7px;letter-spacing:0;}
 }
 </style>
 </head>
@@ -504,38 +536,28 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 <div id="login-screen">
   <div class="login-bg-grid"></div>
   <div class="login-glow"></div>
-  <!-- Lang toggle on login -->
-  <div class="login-lang">
-    <div class="lang-toggle">
-      <button class="lang-btn active" id="ll-en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" id="ll-gu" onclick="setLang('gu')">ગુજ</button>
-    </div>
-  </div>
   <div class="login-wrap">
     <div class="login-logo-row">
       <div class="login-logo">₹ <em>Kharch</em></div>
       <div class="login-tagline">Personal Finance Tracker</div>
     </div>
     <div class="login-card">
-      <div class="login-card-title" data-i18n="login_title">Welcome 👋</div>
-
-      <div id="tab-new">
-        <div class="login-card-sub" data-i18n="login_sub">Enter your first name to access your personal finance dashboard.</div>
-        <div class="login-field">
-          <label data-i18n="login_fname">First Name *</label>
-          <div class="login-input-wrap">
-            <span class="l-icon">👤</span>
-            <input type="text" id="login-fname" data-i18n-placeholder="login_fname_ph" placeholder="e.g. Ravi" maxlength="20" onkeydown="if(event.key==='Enter')doLogin()">
-          </div>
+      <div class="login-card-title">Welcome 👋</div>
+      <div class="login-card-sub">Enter your name to access your personal finance dashboard. All data is saved locally on your device — no password needed.</div>
+      <div class="login-field">
+        <label>Your Full Name</label>
+        <div class="login-input-wrap">
+          <span class="l-icon">👤</span>
+          <input type="text" id="login-name" placeholder="e.g. Ravi Sharma" maxlength="40" onkeydown="if(event.key==='Enter')doLogin()">
         </div>
-        <button class="login-btn" onclick="doLogin()" style="margin-top:18px" id="login-submit-btn">
-          <span id="login-btn-text" data-i18n="login_btn">Enter Dashboard</span> <span id="login-btn-arrow">→</span>
-        </button>
-
       </div>
-
+      <button class="login-btn" onclick="doLogin()">Enter Dashboard <span>→</span></button>
+      <div id="prev-section" style="display:none">
+        <div class="login-divider">or switch account</div>
+        <div class="prev-users" id="prev-users"></div>
+      </div>
     </div>
-    <div class="login-note" data-i18n="login_note">🔒 Data stored locally in your browser &nbsp;·&nbsp; No signup required</div>
+    <div class="login-note">🔒 Data stored locally in your browser &nbsp;·&nbsp; No signup required<br>Login details are sent to the app admin for record keeping.</div>
   </div>
 </div>
 
@@ -544,13 +566,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sb-top">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <div class="sb-logo">₹ Kharch</div>
-        <div class="lang-toggle">
-          <button class="lang-btn active" id="sl-en" onclick="setLang('en')">EN</button>
-          <button class="lang-btn" id="sl-gu" onclick="setLang('gu')">ગુજ</button>
-        </div>
-      </div>
+      <div class="sb-logo">₹ Kharch</div>
       <div class="sb-user">
         <div class="sb-avatar" id="sb-av">R</div>
         <div class="sb-uinfo">
@@ -561,12 +577,13 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
     </div>
     <nav class="sb-nav">
-      <div class="nav-section-label" data-i18n="nav_pages">Pages</div>
-      <div class="nav-item active" onclick="goPage('dashboard',this)"><span class="ni">📊</span><span data-i18n="nav_dashboard">Dashboard</span></div>
-      <div class="nav-item" onclick="goPage('emi',this)"><span class="ni">🏦</span><span data-i18n="nav_emi">EMI Tracker</span></div>
-      <div class="nav-item" onclick="goPage('tips',this)"><span class="ni">💡</span><span data-i18n="nav_tips">Financial Tips</span></div>
-      <div class="nav-item" onclick="goPage('invest',this)"><span class="ni">📈</span><span data-i18n="nav_invest">Investment Ideas</span></div>
-      <div class="nav-section-label" data-i18n="nav_payments">Payment Totals</div>
+      <div class="nav-section-label">Pages</div>
+      <div class="nav-item active" onclick="goPage('dashboard',this)"><span class="ni">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="goPage('daily',this)"><span class="ni">🍱</span>Daily Expenses</div>
+      <div class="nav-item" onclick="goPage('emi',this)"><span class="ni">🏦</span>EMI Tracker</div>
+      <div class="nav-item" onclick="goPage('tips',this)"><span class="ni">💡</span>Financial Tips</div>
+      <div class="nav-item" onclick="goPage('invest',this)"><span class="ni">📈</span>Investment Ideas</div>
+      <div class="nav-section-label">Payment Totals</div>
     </nav>
     <div class="sb-stats">
       <div class="sst-row"><span class="sst-label">GPay</span><span class="sst-val" id="ss-g" style="color:var(--blue)">₹0</span></div>
@@ -595,8 +612,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
           <p id="dash-sub">May 2025 · Track every rupee, every day</p>
         </div>
         <div class="topbar-right">
-          <button class="btn-pdf" onclick="openPdf()">📄 <span data-i18n="btn_pdf">PDF Report</span></button>
-          <button class="btn-primary" onclick="openModal()">+ <span data-i18n="btn_add_entry">Add Entry</span></button>
+          <button class="btn-pdf" onclick="openPdf()">📄 PDF Report</button>
+          <button class="btn-primary" onclick="openModal()">+ Add Entry</button>
         </div>
       </div>
 
@@ -604,7 +621,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       <div class="tip-bar">
         <div class="tip-icon" id="tb-icon">💡</div>
         <div class="tip-content">
-          <div class="tip-label">💡 <span data-i18n="tip_label">Today's Financial Tip</span></div>
+          <div class="tip-label">💡 Today's Financial Tip</div>
           <div class="tip-text" id="tb-text">Loading tip…</div>
         </div>
         <div class="tip-nav">
@@ -615,10 +632,17 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 
       <!-- METRICS -->
       <div class="metrics">
-        <div class="mc mc-g"><div class="mc-ico">💰</div><div class="mc-label" data-i18n="m_income">Total Income</div><div class="mc-val g" id="m-inc">₹0</div><div class="mc-sub" id="m-inc-c">0 entries</div></div>
-        <div class="mc mc-r"><div class="mc-ico">🛒</div><div class="mc-label" data-i18n="m_expense">Total Expenses</div><div class="mc-val r" id="m-exp">₹0</div><div class="mc-sub" id="m-exp-c">0 entries</div></div>
-        <div class="mc mc-p"><div class="mc-ico">📈</div><div class="mc-label" data-i18n="m_invest">Investments</div><div class="mc-val p" id="m-inv">₹0</div><div class="mc-sub" id="m-inv-c">0 entries</div></div>
-        <div class="mc mc-y"><div class="mc-ico">🏦</div><div class="mc-label" data-i18n="m_savings">Net Savings</div><div class="mc-val y" id="m-sav">₹0</div><div class="mc-sub" id="m-sav-p">0% of income</div></div>
+        <div class="mc mc-g"><div class="mc-ico">💰</div><div class="mc-label">Total Income</div><div class="mc-val g" id="m-inc">₹0</div><div class="mc-sub" id="m-inc-c">0 entries</div></div>
+        <div class="mc mc-r"><div class="mc-ico">🛒</div><div class="mc-label">Total Expenses</div><div class="mc-val r" id="m-exp">₹0</div><div class="mc-sub" id="m-exp-c">0 entries</div></div>
+        <div class="mc mc-p"><div class="mc-ico">📈</div><div class="mc-label">Investments</div><div class="mc-val p" id="m-inv">₹0</div><div class="mc-sub" id="m-inv-c">0 entries</div></div>
+        <div class="mc mc-y"><div class="mc-ico">🏦</div><div class="mc-label">Net Savings</div><div class="mc-val y" id="m-sav">₹0</div><div class="mc-sub" id="m-sav-p">0% of income</div></div>
+      </div>
+      <!-- TOTAL ENTRIES COUNTER -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <span id="total-entries-pill" class="entries-counter">📦 0 total entries</span>
+        <span style="font-size:10px;color:var(--muted)">All time across all months</span>
+        <span style="flex:1"></span>
+        <span id="dfe-dash-badge" style="display:none;cursor:pointer" onclick="goPage('daily',document.querySelector('.nav-item:nth-child(2)'))"></span>
       </div>
 
       <!-- DRAFTS -->
@@ -669,41 +693,118 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
       </div>
     </div>
 
+    <!-- ── DAILY FIXED EXPENSES PAGE ── -->
+    <div class="page" id="page-daily">
+      <div class="topbar">
+        <div class="topbar-left">
+          <h2>Daily <em style="color:var(--gold)">Fixed</em> Expenses 🍱</h2>
+          <p>Track your recurring daily costs — lunchbox, tea, commute & more</p>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-secondary" onclick="openDfeModal()">⚙️ Manage Items</button>
+          <button class="btn-primary" onclick="openAddDfeModal()">+ Add Fixed Item</button>
+        </div>
+      </div>
+
+      <!-- Hero / Summary -->
+      <div class="dfe-hero">
+        <h3>Your <em>Fixed</em> Daily Costs</h3>
+        <p>Add recurring daily expenses like lunchbox, tea, transport etc. Mark them as paid each day and track your monthly spend automatically.</p>
+        <div class="dfe-summary">
+          <div class="dfe-stat">
+            <div class="dfe-stat-ico">🍱</div>
+            <div class="dfe-stat-val" id="dfe-total-day">₹0</div>
+            <div class="dfe-stat-lbl">Daily Total</div>
+          </div>
+          <div class="dfe-stat dfe-green">
+            <div class="dfe-stat-ico">📅</div>
+            <div class="dfe-stat-val" id="dfe-total-month">₹0</div>
+            <div class="dfe-stat-lbl">Est. Monthly</div>
+          </div>
+          <div class="dfe-stat dfe-blue">
+            <div class="dfe-stat-ico">✅</div>
+            <div class="dfe-stat-val" id="dfe-paid-today">0/0</div>
+            <div class="dfe-stat-lbl">Paid Today</div>
+          </div>
+          <div class="dfe-stat dfe-purple">
+            <div class="dfe-stat-ico">📦</div>
+            <div class="dfe-stat-val" id="dfe-item-count">0</div>
+            <div class="dfe-stat-lbl">Total Items</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly streak -->
+      <div class="streak-bar" id="dfe-streak-bar">
+        <div class="streak-ico">🔥</div>
+        <div class="streak-info">
+          <div class="streak-title">This week's tracking — <span id="streak-count">0</span> days marked</div>
+          <div class="streak-sub">Mark all items daily to keep your streak going</div>
+        </div>
+        <div class="streak-days" id="streak-days"></div>
+      </div>
+
+      <!-- Fixed items grid -->
+      <div class="dfe-section-label">📌 Your Fixed Daily Items</div>
+      <div class="dfe-grid" id="dfe-grid">
+        <div class="dfe-empty">
+          <div class="dfe-empty-ico">🍱</div>
+          <p>No fixed expenses added yet.<br>Click <strong>+ Add Fixed Item</strong> to start tracking.</p>
+        </div>
+      </div>
+
+      <!-- Today's Paid log -->
+      <div class="dfe-section-label">📋 Today's Paid Log</div>
+      <div class="card">
+        <div class="card-head">
+          Today's Marked Expenses
+          <span class="dfe-count-badge" id="dfe-log-count">0 entries</span>
+        </div>
+        <div class="dfe-log" id="dfe-log">
+          <div class="empty"><div class="be">🧾</div><p>No items marked today yet.</p></div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── EMI PAGE ── -->
     <div class="page" id="page-emi">
       <div class="topbar">
         <div class="topbar-left">
-          <h2>EMI <em style="color:var(--red)" data-i18n="emi_tracker">Tracker</em> 🏦</h2>
-          <p data-i18n="emi_sub">Track your loan EMIs, due dates & never miss a payment</p>
+          <h2>EMI <em style="color:var(--red)">Tracker</em> 🏦</h2>
+          <p>Track your loan EMIs, due dates & never miss a payment</p>
         </div>
         <div class="topbar-right">
-          <button class="btn-primary" onclick="openEmiModal()">+ <span data-i18n="btn_add_emi">Add EMI</span></button>
+          <button class="btn-primary" onclick="openEmiModal()">+ Add EMI</button>
         </div>
       </div>
+
+      <!-- Hero summary -->
       <div class="emi-hero">
         <div class="emi-hero-left">
-          <h3 data-i18n="emi_hero_title">Stay on top of your <em>loans</em></h3>
-          <p data-i18n="emi_hero_sub">Add your EMIs with due dates and get a clear picture of upcoming payments. Mark them as paid each month to track your progress.</p>
+          <h3>Stay on top of your <em>loans</em></h3>
+          <p>Add your EMIs with due dates and get a clear picture of upcoming payments. Mark them as paid each month to track your progress.</p>
         </div>
         <div class="emi-summary">
           <div class="emi-sum-box">
             <div class="esb-val" id="emi-total">₹0</div>
-            <div class="esb-lbl" data-i18n="emi_monthly">Monthly Burden</div>
+            <div class="esb-lbl">Monthly Burden</div>
           </div>
           <div class="emi-sum-box esb-upcoming">
             <div class="esb-val" id="emi-upcoming-count">0</div>
-            <div class="esb-lbl" data-i18n="emi_due_month">Due This Month</div>
+            <div class="esb-lbl">Due This Month</div>
           </div>
           <div class="emi-sum-box esb-paid">
             <div class="esb-val" id="emi-paid-count">0</div>
-            <div class="esb-lbl" data-i18n="emi_paid_month">Paid This Month</div>
+            <div class="esb-lbl">Paid This Month</div>
           </div>
         </div>
       </div>
+
+      <!-- EMI grid -->
       <div class="emi-grid" id="emi-grid">
         <div class="emi-empty" style="grid-column:1/-1">
           <div class="ee-ico">🏦</div>
-          <p data-i18n="emi_empty">No EMIs added yet.<br>Click <strong>+ Add EMI</strong> to start tracking your loans.</p>
+          <p>No EMIs added yet.<br>Click <strong>+ Add EMI</strong> to start tracking your loans.</p>
         </div>
       </div>
     </div>
@@ -712,8 +813,8 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="page" id="page-tips">
       <div class="topbar">
         <div class="topbar-left">
-          <h2>Financial <em style="color:var(--accent2)" data-i18n="tips_heading">Tips</em> 💡</h2>
-          <p data-i18n="tips_sub">Daily wisdom to grow your wealth and cut wasteful spending</p>
+          <h2>Financial <em style="color:var(--accent2)">Tips</em> 💡</h2>
+          <p>Daily wisdom to grow your wealth and cut wasteful spending</p>
         </div>
       </div>
       <div class="tips-grid" id="tips-grid"></div>
@@ -723,11 +824,11 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <div class="page" id="page-invest">
       <div class="topbar">
         <div class="topbar-left">
-          <h2>Investment <em style="color:var(--purple)" data-i18n="invest_heading">Ideas</em> 📈</h2>
-          <p data-i18n="invest_sub">Curated options to grow your money — picked for Indian investors</p>
+          <h2>Investment <em style="color:var(--purple)">Ideas</em> 📈</h2>
+          <p>Curated options to grow your money — picked for Indian investors</p>
         </div>
       </div>
-      <div class="disclaimer"><strong>⚠️ <span data-i18n="disclaimer_head">Disclaimer:</span></strong> <span data-i18n="disclaimer_body">These are general educational suggestions only. They are not personalised financial advice. Please consult a SEBI-registered financial advisor before investing. Past returns are not a guarantee of future performance.</span></div>
+      <div class="disclaimer"><strong>⚠️ Disclaimer:</strong> These are general educational suggestions only. They are not personalised financial advice. Please consult a SEBI-registered financial advisor before investing. Past returns are not a guarantee of future performance.</div>
       <div class="inv-grid" id="inv-grid"></div>
     </div>
 
@@ -799,7 +900,55 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
-<!-- USER CODE MODAL -->
+<!-- ADD DFE ITEM MODAL -->
+<div class="overlay" id="dfe-modal" onclick="if(event.target===this)closeDfeModal()">
+  <div class="modal" style="width:480px">
+    <div class="modal-head">
+      <h3>➕ Add Fixed Daily Expense</h3>
+      <button class="modal-x" onclick="closeDfeModal()">✕</button>
+    </div>
+    <div class="ef">
+      <div class="fg">
+        <label>Choose an Icon</label>
+        <div class="dfe-modal-ico-grid" id="dfe-ico-grid">
+          <!-- populated by JS -->
+        </div>
+        <input type="text" id="dfe-custom-ico" placeholder="Or type a custom emoji 🍔" maxlength="4" style="margin-top:4px;">
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Item Name *</label><input type="text" id="dfe-name" placeholder="e.g. Lunchbox, Tea, Auto"></div>
+        <div class="fg"><label>Price per Day (₹) *</label><input type="number" id="dfe-price" placeholder="0" min="0" step="1"></div>
+      </div>
+      <div class="fg">
+        <label>Frequency</label>
+        <div class="freq-toggle">
+          <div class="ftb af" id="ft-daily" onclick="setDfeFreq('daily')">📅 Daily</div>
+          <div class="ftb" id="ft-weekday" onclick="setDfeFreq('weekday')">💼 Weekdays</div>
+          <div class="ftb" id="ft-weekend" onclick="setDfeFreq('weekend')">🌅 Weekends</div>
+          <div class="ftb" id="ft-custom" onclick="setDfeFreq('custom')">⚙️ Custom</div>
+        </div>
+      </div>
+      <div class="fg" id="dfe-custom-days-wrap" style="display:none">
+        <label>Days active (tick the days)</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-0" checked> Sun</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-1" checked> Mon</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-2" checked> Tue</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-3" checked> Wed</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-4" checked> Thu</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-5" checked> Fri</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" id="dcd-6" checked> Sat</label>
+        </div>
+      </div>
+      <div class="fg"><label>Note (optional)</label><input type="text" id="dfe-note" placeholder="e.g. tiffin from home, office canteen"></div>
+      <div style="background:var(--s3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--muted)">
+        💡 <strong style="color:var(--gold)" id="dfe-monthly-preview">Est. ₹0/month</strong> — based on frequency and price
+      </div>
+      <button class="sbtn" style="background:var(--gold);color:#08090d" onclick="submitDfeItem()">🍱 Add Fixed Expense</button>
+    </div>
+  </div>
+</div>
+
 <!-- EMI MODAL -->
 <div class="overlay" id="emi-modal" onclick="if(event.target===this)closeEmiModal()">
   <div class="modal" style="width:500px">
@@ -863,33 +1012,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
-<!-- ══════════════════ MOBILE BOTTOM NAV ══════════════════ -->
-<nav class="mob-nav" id="mob-nav" style="display:none">
-  <div class="mob-nav-inner">
-    <button class="mob-nav-item active" id="mn-dashboard" onclick="goPage('dashboard',this);setMobNav('dashboard')">
-      <span class="mn-ico">📊</span><span data-i18n="nav_dashboard">Home</span>
-    </button>
-    <button class="mob-nav-item" id="mn-emi" onclick="goPage('emi',this);setMobNav('emi')">
-      <span class="mn-ico">🏦</span><span data-i18n="nav_emi_short">EMIs</span>
-    </button>
-    <!-- SPLIT FAB: Add Entry + Add EMI -->
-    <div class="mob-fab-wrap">
-      <button class="mob-fab fab-entry" onclick="openModal()">
-        <span class="fab-ico">＋</span><span data-i18n="fab_entry">Entry</span>
-      </button>
-      <button class="mob-fab fab-emi" onclick="openEmiModal()">
-        <span class="fab-ico">＋</span><span data-i18n="fab_emi">EMI</span>
-      </button>
-    </div>
-    <button class="mob-nav-item" id="mn-tips" onclick="goPage('tips',this);setMobNav('tips')">
-      <span class="mn-ico">💡</span><span data-i18n="nav_tips_short">Tips</span>
-    </button>
-    <button class="mob-nav-item" id="mn-invest" onclick="goPage('invest',this);setMobNav('invest')">
-      <span class="mn-ico">📈</span><span data-i18n="nav_invest_short">Invest</span>
-    </button>
-  </div>
-</nav>
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -899,286 +1021,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const CE={'Food & Dining':'🍽️','Transport':'🚗','Shopping':'🛍️','Utilities':'💡','Rent':'🏠','Health':'💊','Entertainment':'🎬','Education':'📚','Investment':'📈','Salary':'💼','Freelance':'💻','Other':'📌'};
 const CC=['#ff8c42','#4f9eff','#e8ff5a','#3de88a','#9b72ff','#ff4f6d','#5affd4','#f5c842','#5a5b70','#34d399','#fb923c','#94a3b8'];
-
-// ══════════════════════════════════════════
-// LANGUAGE / i18n
-// ══════════════════════════════════════════
-let currentLang = localStorage.getItem('kharch_lang') || 'en';
-
-const LANG = {
-  en: {
-    // Login
-    login_title:'Welcome 👋',
-    login_email:'Email Address *',
-    login_email_ph:'e.g. ravi@gmail.com',
-    login_sub:'Enter your first name to access your personal finance dashboard.',
-    login_label:'Your Full Name',
-    login_fname:'First Name *',
-    login_fname_ph:'e.g. Ravi',
-    login_phone:'Mobile Number *',
-    login_phone_ph:'e.g. 9876543210',
-    login_placeholder:'e.g. Ravi Sharma',
-    login_btn:'Enter Dashboard',
-    login_note:'🔒 Data stored locally in your browser · No signup required',
-    // Nav
-    nav_pages:'Pages',
-    nav_dashboard:'Dashboard',
-    nav_emi:'EMI Tracker',
-    nav_tips:'Financial Tips',
-    nav_invest:'Investment Ideas',
-    nav_payments:'Payment Totals',
-    nav_emi_short:'EMIs',
-    nav_tips_short:'Tips',
-    nav_invest_short:'Invest',
-    // Buttons
-    btn_pdf:'PDF Report',
-    btn_add_entry:'Add Entry',
-    btn_add_emi:'Add EMI',
-    fab_entry:'Entry',
-    fab_emi:'EMI',
-    // Dashboard
-    tip_label:"Today's Financial Tip",
-    m_income:'Total Income',
-    m_expense:'Total Expenses',
-    m_invest:'Investments',
-    m_savings:'Net Savings',
-    dash_greeting_morning:'Good morning, ',
-    dash_greeting_afternoon:'Good afternoon, ',
-    dash_greeting_evening:'Good evening, ',
-    dash_sub_fmt:' · Track every rupee, every day',
-    // EMI
-    emi_tracker:'Tracker',
-    emi_sub:'Track your loan EMIs, due dates & never miss a payment',
-    emi_hero_title:'Stay on top of your loans',
-    emi_hero_sub:'Add your EMIs with due dates and get a clear picture of upcoming payments. Mark them as paid each month to track your progress.',
-    emi_monthly:'Monthly Burden',
-    emi_due_month:'Due This Month',
-    emi_paid_month:'Paid This Month',
-    emi_empty:'No EMIs added yet.\nClick + Add EMI to start tracking your loans.',
-    // EMI status
-    emi_overdue:'OVERDUE',
-    emi_today:'DUE TODAY',
-    emi_upcoming:'DUE SOON',
-    emi_due:'UPCOMING',
-    emi_paid:'PAID',
-    emi_mark_paid:'✅ Mark as Paid',
-    emi_mark_unpaid:'↩️ Mark Unpaid',
-    emi_was_due:'⚠️ Overdue — was due on',
-    emi_due_today:'🔔 Due TODAY —',
-    emi_due_in:'⏰ Due in',
-    emi_day:'day',
-    emi_days:'days',
-    emi_paid_month_txt:'✅ Paid this month',
-    emi_due_every:'📅 Due on',
-    emi_due_every2:'of every month',
-    emi_of:'of',
-    // Tips page
-    tips_heading:'Tips',
-    tips_sub:'Daily wisdom to grow your wealth and cut wasteful spending',
-    // Invest page
-    invest_heading:'Ideas',
-    invest_sub:'Curated options to grow your money — picked for Indian investors',
-    disclaimer_head:'Disclaimer:',
-    disclaimer_body:'These are general educational suggestions only. They are not personalised financial advice. Please consult a SEBI-registered financial advisor before investing. Past returns are not a guarantee of future performance.',
-    // Modal labels
-    modal_new:'New Entry',
-    modal_draft:'✏️ Resume Draft',
-    modal_entry_type:'Entry Type',
-    modal_desc:'Description *',
-    modal_amt:'Amount (₹) *',
-    modal_cat:'Category',
-    modal_date:'Date',
-    modal_pay:'Payment Method',
-    modal_note:'Note (optional)',
-    modal_save_draft:'Save Draft',
-    modal_add:'Add Entry',
-    // EMI modal
-    emi_modal_title:'➕ Add New EMI',
-    emi_loan_name:'Loan Name *',
-    emi_lender:'Lender / Bank',
-    emi_amt:'Monthly EMI Amount (₹) *',
-    emi_due_day:'Due Date (Day of Month) *',
-    emi_total_emis:'Total EMIs',
-    emi_paid_so_far:'EMIs Paid So Far',
-    emi_cat:'Loan Category',
-    emi_notify:'🔔 Show reminder badge when due date is near (within 3 days)',
-    emi_note:'Notes (optional)',
-    emi_save:'💾 Save EMI',
-    // Toast msgs
-    toast_welcome:'👋 Welcome, ',
-    toast_added_exp:'✅ Expense added!',
-    toast_added_inc:'✅ Income added!',
-    toast_added_inv:'✅ Investment added!',
-    toast_deleted:'🗑️ Deleted',
-    toast_draft_saved:'📝 Draft saved!',
-    toast_draft_removed:'🗑️ Draft removed',
-    toast_emi_added:'✅ EMI added!',
-    toast_emi_paid:'✅ EMI marked as paid!',
-    toast_emi_unpaid:'↩️ Marked as unpaid',
-    toast_emi_deleted:'🗑️ EMI removed',
-    // Footer
-    footer_by:'Made with',
-    footer_by2:'by',
-    footer_local:'All data is stored locally on your device',
-    // Period
-    sb_period:'Period',
-  },
-  gu: {
-    // Login
-    login_title:'સ્વાગત છે 👋',
-    login_email:'ઇમેઇલ સરનામું *',
-    login_email_ph:'દા.ત. ravi@gmail.com',
-    login_sub:'નીચેની વિગતો દાખલ કરો. અમે તમારો અનોખો એક્સેસ કોડ તમારા ઇમેઇલ પર મોકલીશું.',
-    login_label:'તમારું પૂરું નામ',
-    login_fname:'પ્રથમ નામ *',
-    login_fname_ph:'દા.ત. રવિ',
-    login_phone:'મોબાઇલ નંબર *',
-    login_phone_ph:'દા.ત. 9876543210',
-    login_placeholder:'દા.ત. રવિ શર્મા',
-    login_btn:'ડૅશબોર્ડ ખોલો',
-    login_note:'🔒 ડેટા તમારા બ્રાઉઝરમાં સ્ટોર છે · સાઇનઅપ જરૂરી નથી',
-    // Nav
-    nav_pages:'પૃષ્ઠો',
-    nav_dashboard:'ડૅશબોર્ડ',
-    nav_emi:'EMI ટ્રૅકર',
-    nav_tips:'નાણાંકીય ટિપ્સ',
-    nav_invest:'રોકાણ વિચારો',
-    nav_payments:'ચૂકવણી કુલ',
-    nav_emi_short:'EMIs',
-    nav_tips_short:'ટિપ્સ',
-    nav_invest_short:'રોકાણ',
-    // Buttons
-    btn_pdf:'PDF રિપોર્ટ',
-    btn_add_entry:'+ એન્ટ્રી ઉમેરો',
-    btn_add_emi:'+ EMI ઉમેરો',
-    fab_entry:'એન્ટ્રી',
-    fab_emi:'EMI',
-    // Dashboard
-    tip_label:'આજની નાણાંકીય ટિપ',
-    m_income:'કુલ આવક',
-    m_expense:'કુલ ખર્ચ',
-    m_invest:'રોકાણ',
-    m_savings:'ચોખ્ખી બચત',
-    dash_greeting_morning:'સુપ્રભાત, ',
-    dash_greeting_afternoon:'શુભ બપોર, ',
-    dash_greeting_evening:'શુભ સાંજ, ',
-    dash_sub_fmt:' · દરેક રૂપિયો ટ્રૅક કરો',
-    // EMI
-    emi_tracker:'ટ્રૅકર',
-    emi_sub:'તમારી EMI, છેલ્લી તારીખ ટ્રૅક કરો & ક્યારેય ચૂકવવાનું ભૂલો નહીં',
-    emi_hero_title:'તમારી લોન પર નજર રાખો',
-    emi_hero_sub:'EMI અને છેલ્લી તારીખ ઉમેરો. દર મહિને ચૂકવ્યા પછી ટિક કરો અને પ્રગતિ ટ્રૅક કરો.',
-    emi_monthly:'માસિક ભાર',
-    emi_due_month:'આ મહિને બાકી',
-    emi_paid_month:'આ મહિને ચૂકવ્યું',
-    emi_empty:'હજુ કોઈ EMI ઉમેરી નથી.\n+ EMI ઉમેરો પર ક્લિક કરો.',
-    // EMI status
-    emi_overdue:'બાકી',
-    emi_today:'આજે બાકી',
-    emi_upcoming:'જલ્દી બાકી',
-    emi_due:'આગામી',
-    emi_paid:'ચૂકવ્યું',
-    emi_mark_paid:'✅ ચૂકવ્યા તરીકે માર્ક કરો',
-    emi_mark_unpaid:'↩️ અચૂક્વ્યા તરીકે માર્ક કરો',
-    emi_was_due:'⚠️ બાકી — છેલ્લી તારીખ હતી',
-    emi_due_today:'🔔 આજે જ બાકી —',
-    emi_due_in:'⏰ બાકી છે',
-    emi_day:'દિવસ',
-    emi_days:'દિવસ',
-    emi_paid_month_txt:'✅ આ મહિને ચૂકવ્યું',
-    emi_due_every:'📅 દર મહિને',
-    emi_due_every2:'ના રોજ બાકી',
-    emi_of:'માંથી',
-    // Tips page
-    tips_heading:'ટિપ્સ',
-    tips_sub:'દરરોજ નવી ટિપ — સંપત્તિ વધારો, ખોટો ખર્ચ ઘટાડો',
-    // Invest page
-    invest_heading:'વિચારો',
-    invest_sub:'ભારતીય રોકાણકારો માટે પસંદ કરેલ રોકાણ વિકલ્પો',
-    disclaimer_head:'ચેતવણી:',
-    disclaimer_body:'આ ફક્ત સામાન્ય શૈક્ષણિક સૂચનો છે. આ વ્યક્તિગત નાણાંકીય સલાહ નથી. રોકાણ કરતા પહેલાં SEBI-નોંધાયેલ નાણાંકીય સલાહકારની સલાહ લો. ભૂતકાળનો વળતર ભવિષ્ય માટે ગેરંટી નથી.',
-    // Modal labels
-    modal_new:'નવી એન્ટ્રી',
-    modal_draft:'✏️ ડ્રાફ્ટ ચાલુ રાખો',
-    modal_entry_type:'એન્ટ્રી પ્રકાર',
-    modal_desc:'વર્ણન *',
-    modal_amt:'રકમ (₹) *',
-    modal_cat:'શ્રેણી',
-    modal_date:'તારીખ',
-    modal_pay:'ચૂકવણી પદ્ધતિ',
-    modal_note:'નોંધ (વૈકલ્પિક)',
-    modal_save_draft:'ડ્રાફ્ટ સાચવો',
-    modal_add:'એન્ટ્રી ઉમેરો',
-    // EMI modal
-    emi_modal_title:'➕ નવી EMI ઉમેરો',
-    emi_loan_name:'લોનનું નામ *',
-    emi_lender:'ધિરાણદાર / બેંક',
-    emi_amt:'માસિક EMI રકમ (₹) *',
-    emi_due_day:'છેલ્લી તારીખ (મહિનાની તારીખ) *',
-    emi_total_emis:'કુલ EMI',
-    emi_paid_so_far:'અત્યાર સુધી ચૂકવ્યું',
-    emi_cat:'લોન શ્રેણી',
-    emi_notify:'🔔 છેલ્લી તારીખ નજીક હોય ત્યારે રીમાઇન્ડર બૅજ બતાવો (3 દિવસ અગાઉ)',
-    emi_note:'નોંધ (વૈકલ્પિક)',
-    emi_save:'💾 EMI સાચવો',
-    // Toast
-    toast_welcome:'👋 સ્વાગત છે, ',
-    toast_added_exp:'✅ ખર્ચ ઉમેર્યો!',
-    toast_added_inc:'✅ આવક ઉમેરી!',
-    toast_added_inv:'✅ રોકાણ ઉમેર્યું!',
-    toast_deleted:'🗑️ ડિલીટ થઈ ગયું',
-    toast_draft_saved:'📝 ડ્રાફ્ટ સચવાયો!',
-    toast_draft_removed:'🗑️ ડ્રાફ્ટ દૂર કર્યો',
-    toast_emi_added:'✅ EMI ઉમેર્યું!',
-    toast_emi_paid:'✅ EMI ચૂકવ્યા તરીકે માર્ક!',
-    toast_emi_unpaid:'↩️ અચૂક્વ્યા તરીકે માર્ક',
-    toast_emi_deleted:'🗑️ EMI દૂર કર્યું',
-    // Footer
-    footer_by:'બનાવ્યું',
-    footer_by2:'દ્વારા',
-    footer_local:'બધો ડેટા તમારા ડિવાઇસ પર સ્ટોર છે',
-    sb_period:'સમયગાળો',
-  }
-};
-
-function t(key){ return (LANG[currentLang]||LANG.en)[key] || (LANG.en[key] || key); }
-
-function setLang(lang){
-  currentLang = lang;
-  localStorage.setItem('kharch_lang', lang);
-  // Update all toggle buttons
-  ['ll-en','sl-en'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',lang==='en');});
-  ['ll-gu','sl-gu'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',lang==='gu');});
-  // Apply all data-i18n elements
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key=el.getAttribute('data-i18n');
-    const val=t(key);
-    if(val) el.innerHTML=val.replace(/\n/g,'<br>');
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
-    const key=el.getAttribute('data-i18n-placeholder');
-    el.placeholder=t(key)||el.placeholder;
-  });
-  // Re-render dynamic content if logged in
-  if(currentUser){
-    updateMonthDisplay();
-    render();
-    renderEmis();
-    buildTipsPage();
-    buildInvestPage();
-    // Update greeting
-    const hr=new Date().getHours();
-    const greet=hr<12?t('dash_greeting_morning'):hr<17?t('dash_greeting_afternoon'):t('dash_greeting_evening');
-    document.getElementById('dash-title').childNodes[0].textContent=greet;
-    // Tip
-    showTip(tipIdx);
-  }
-}
-
-// Apply language on page load
-function applyLangOnLoad(){
-  setLang(currentLang);
-}
+const EMAILJS_PK='YOUR_EMAILJS_PUBLIC_KEY'; // Replace with your EmailJS public key
+const EMAILJS_SVC='YOUR_SERVICE_ID';         // Replace with your EmailJS service ID
+const EMAILJS_TPL='YOUR_TEMPLATE_ID';        // Replace with your EmailJS template ID
 
 const TIPS=[
   {icon:'💸',text:'Follow the 50/30/20 rule: 50% needs, 30% wants, 20% savings. Small adjustments compound into big wealth over time.',cat:'Budgeting',color:'var(--accent)'},
@@ -1235,65 +1080,97 @@ function nextTip(){showTip(tipIdx+1);}
 function prevTip(){showTip(tipIdx-1);}
 
 // ══════════════════════════════════════════
-// LOGIN — Name-based, auto-saved & auto-restored
+// LOGIN
 // ══════════════════════════════════════════
-function skey(name, t){ return `kharch_${name}_${t}`; }
-function getSavedUser(){ return localStorage.getItem('kharch_current_user'); }
-function setSavedUser(name){ localStorage.setItem('kharch_current_user', name); }
+function getUsers(){return JSON.parse(localStorage.getItem('kharch_users')||'[]');}
+function saveUsers(u){localStorage.setItem('kharch_users',JSON.stringify(u));}
+function skey(name,t){if(!name)return`kharch_unknown_${t}`;return`kharch_${name.toLowerCase().replace(/\s+/g,'_')}_${t}`;}
 
-function doLogin(){
-  const fname = (document.getElementById('login-fname').value||'').trim();
-  if(!fname || fname.length < 2){showToast('⚠️ Enter your first name (min 2 chars)','warn');return;}
-  loginAs(fname);
+function renderPrev(){
+  const users=getUsers();
+  const sec=document.getElementById('prev-section');
+  const ul=document.getElementById('prev-users');
+  if(!users.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  ul.innerHTML=users.filter(u=>u&&u.name).map(u=>`<div class="prev-pill" onclick="quickLogin('${u.name}')"><div class="av">${u.name[0].toUpperCase()}</div>${u.name}</div>`).join('');
 }
-
-function loginAs(displayName){
-  currentUser = displayName;
-  setSavedUser(displayName);
-
-  const sinceKey = skey(displayName, 'since');
-  let sinceStr = localStorage.getItem(sinceKey);
-  if(!sinceStr){
-    sinceStr = new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
-    localStorage.setItem(sinceKey, sinceStr);
+function doLogin(){
+  const name=document.getElementById('login-name').value.trim();
+  if(!name||name.length<2){showToast('⚠️ Enter your name (min 2 chars)','warn');return;}
+  loginAs(name);
+}
+function quickLogin(name){document.getElementById('login-name').value=name;loginAs(name);}
+function loginAs(name){
+  currentUser=name;
+  let users=getUsers();
+  const existing=users.find(u=>u&&u.name&&u.name.toLowerCase()===name.toLowerCase());
+  const sinceStr=existing?existing.since:new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+  if(!existing){
+    users.unshift({name,since:sinceStr,loginTime:new Date().toISOString()});
+    if(users.length>10)users=users.slice(0,10);
+    saveUsers(users);
+    // Send email notification
+    sendLoginEmail(name,sinceStr);
+  } else {
+    // Update last login
+    existing.lastLogin=new Date().toISOString();
+    saveUsers(users);
+    sendLoginEmail(name,sinceStr);
   }
-
-  entries = JSON.parse(localStorage.getItem(skey(displayName,'entries'))||'[]');
-  drafts  = JSON.parse(localStorage.getItem(skey(displayName,'drafts'))||'[]');
-  emis    = JSON.parse(localStorage.getItem(skey(displayName,'emis'))||'[]');
-
-  const init = displayName[0].toUpperCase();
-  document.getElementById('sb-av').textContent = init;
-  document.getElementById('sb-name').textContent = displayName;
-  document.getElementById('sb-since').textContent = `Since ${sinceStr}`;
-  document.getElementById('dash-name').textContent = displayName.split(' ')[0];
-  const hr = new Date().getHours();
-  document.getElementById('dash-title').querySelector('em').textContent = displayName.split(' ')[0];
-  document.getElementById('dash-title').childNodes[0].textContent = hr<12?t('dash_greeting_morning'):hr<17?t('dash_greeting_afternoon'):t('dash_greeting_evening');
-
+  entries=JSON.parse(localStorage.getItem(skey(name,'entries'))||'[]');
+  drafts=JSON.parse(localStorage.getItem(skey(name,'drafts'))||'[]');
+  emis=JSON.parse(localStorage.getItem(skey(name,'emis'))||'[]');
+  dfeItems=JSON.parse(localStorage.getItem(skey(name,'dfe'))||'[]');
+  const init=name[0].toUpperCase();
+  document.getElementById('sb-av').textContent=init;
+  document.getElementById('sb-name').textContent=name;
+  document.getElementById('sb-since').textContent=`Since ${sinceStr}`;
+  document.getElementById('dash-name').textContent=name.split(' ')[0];
+  const hr=new Date().getHours();
+  document.getElementById('dash-title').querySelector('em').textContent=name.split(' ')[0];
+  document.getElementById('dash-title').childNodes[0].textContent=hr<12?'Good morning, ':hr<17?'Good afternoon, ':'Good evening, ';
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-screen').classList.add('visible');
   document.getElementById('app-footer').style.display='block';
-  document.getElementById('mob-nav').style.display='block';
+  document.getElementById('mobile-nav').style.display='block';
   updateMonthDisplay();
+  // Seed daily tip — changes every day automatically
   showTip(getDailyTipIdx());
   buildTipsPage();
   buildInvestPage();
   renderEmis();
+  renderDfe();
   render();
-  showToast(`${t('toast_welcome')}${displayName.split(' ')[0]}!`,'ok');
+  showToast(`👋 Welcome, ${name.split(' ')[0]}!`,'ok');
+}
+
+// ══════════════════════════════════════════
+// EMAIL (EmailJS)
+// ══════════════════════════════════════════
+function sendLoginEmail(name,since){
+  try{
+    emailjs.init(EMAILJS_PK);
+    emailjs.send(EMAILJS_SVC,EMAILJS_TPL,{
+      to_email:'contact.becreatif@gmail.com',
+      user_name:name,
+      login_time:new Date().toLocaleString('en-IN'),
+      member_since:since,
+      device:navigator.userAgent.substring(0,80),
+      entries_count:entries.length
+    }).then(()=>console.log('Login email sent'),err=>console.log('Email err:',err));
+  }catch(e){console.log('EmailJS not configured:',e);}
 }
 
 function doLogout(){
-  currentUser=null;entries=[];drafts=[];emis=[];
-  localStorage.removeItem('kharch_current_user');
+  currentUser=null;entries=[];drafts=[];emis=[];dfeItems=[];
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('app-screen').classList.remove('visible');
   document.getElementById('app-footer').style.display='none';
-  document.getElementById('mob-nav').style.display='none';
-  if(document.getElementById('login-fname')) document.getElementById('login-fname').value='';
+  document.getElementById('mobile-nav').style.display='none';
+  document.getElementById('login-name').value='';
   if(barChart){barChart.destroy();barChart=null;}
   if(donutChart){donutChart.destroy();donutChart=null;}
+  renderPrev();
 }
 
 // ══════════════════════════════════════════
@@ -1320,10 +1197,11 @@ function goPage(id,el){
   document.getElementById(`page-${id}`).classList.add('active');
   if(el)el.classList.add('active');
 }
-function setMobNav(id){
-  document.querySelectorAll('.mob-nav-item').forEach(b=>b.classList.remove('active'));
-  const el=document.getElementById(`mn-${id}`);
-  if(el)el.classList.add('active');
+function goPageMobile(pageId,btnId){
+  goPage(pageId,null);
+  document.querySelectorAll('.mnav-item').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById(btnId);
+  if(btn)btn.classList.add('active');
 }
 
 // ══════════════════════════════════════════
@@ -1380,7 +1258,7 @@ function submitEntry(){
   if(eDraftId){drafts=drafts.filter(d=>d.id!==eDraftId);saveDrafts2();}
   const entry={id:Date.now(),desc,amount,type:cType,pay:cPay,category:document.getElementById('f-cat').value,date:date||new Date().toISOString().split('T')[0],note:document.getElementById('f-note').value.trim()};
   entries.unshift(entry);saveEntries();closeModal(true);render();
-  showToast(cType==='expense'?t('toast_added_exp'):cType==='income'?t('toast_added_inc'):t('toast_added_inv'),'ok');
+  showToast(`✅ ${cType==='expense'?'Expense':cType==='income'?'Income':'Investment'} added!`,'ok');
 }
 function delEntry(id){entries=entries.filter(e=>e.id!==id);saveEntries();render();showToast('🗑️ Deleted','warn');}
 
@@ -1486,9 +1364,10 @@ function renderEntries(){
   else if(cFilter==='phonepay')f=me.filter(e=>e.pay==='phonepay');
   else if(cFilter==='cash')f=me.filter(e=>e.pay==='cash');
   const list=document.getElementById('entry-list');
-  if(!f.length){list.innerHTML=`<div class="empty"><div class="be">🧾</div><p>No entries match this filter.<br>Click <strong>+ Add Entry</strong> to begin.</p></div>`;return;}
+  if(!f.length){list.innerHTML=`<div class="empty"><div class="be">🧾</div><p>No entries match this filter.<br>Click <strong>+ Add Entry</strong> to begin.</p></div>`;updateTotalEntriesDisplay();return;}
   const PL={gpay:'GPay',phonepay:'PhonePe',cash:'Cash'};
   list.innerHTML=f.map(e=>{const sign=e.type==='income'?'+':'-';const cls=e.type==='income'?'cr':e.type==='investment'?'iv':'dr';return`<div class="ei"><span class="ei-emoji">${CE[e.category]||'📌'}</span><div class="ei-body"><div class="ei-desc">${e.desc}</div><div class="ei-meta"><span>${fmtD(e.date)}</span><span class="ptag ${e.pay}">${PL[e.pay]||e.pay}</span><span>${e.category}</span>${e.type==='investment'?'<span class="ibadge">INVEST</span>':''}${e.note?`<span title="${e.note}">📝</span>`:''}</div></div><span class="ei-amt ${cls}">${sign}${fmt(e.amount)}</span><button class="ei-del" onclick="delEntry(${e.id})">✕</button></div>`;}).join('');
+  updateTotalEntriesDisplay();
 }
 
 // ══════════════════════════════════════════
@@ -1775,26 +1654,278 @@ function renderEmis(){
 function ordinal(n){const s=['th','st','nd','rd'];const v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
 
 // ══════════════════════════════════════════
-// TOAST
+// DAILY FIXED EXPENSES
 // ══════════════════════════════════════════
-function showToast(msg,type='ok'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className=`toast show ${type}`;
-  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3000);
+const DFE_ICONS=['🍱','☕','🍵','🥪','🥗','🍔','🚗','🛵','🚌','🏃','🥤','🍪','🍩','🥛','🍎','🧃','💊','📚','🎵','🎮','🧹','🌿'];
+let dfeItems=[], cDfeFreq='daily', cDfeIco='🍱';
+
+function saveDfeItems(){localStorage.setItem(skey(currentUser,'dfe'),JSON.stringify(dfeItems));}
+
+function openAddDfeModal(){
+  // populate icon grid
+  const grid=document.getElementById('dfe-ico-grid');
+  grid.innerHTML=DFE_ICONS.map((ico,i)=>`<div class="dfe-ico-btn${i===0?' sel':''}" onclick="selectDfeIco('${ico}',this)">${ico}</div>`).join('');
+  cDfeIco=DFE_ICONS[0];
+  ['dfe-name','dfe-price','dfe-note','dfe-custom-ico'].forEach(id=>document.getElementById(id).value='');
+  setDfeFreq('daily');
+  document.getElementById('dfe-monthly-preview').textContent='Est. ₹0/month';
+  // live preview
+  ['dfe-price'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', updateDfePreview);
+  });
+  document.getElementById('dfe-modal').classList.add('open');
 }
+function closeDfeModal(){document.getElementById('dfe-modal').classList.remove('open');}
+function openDfeModal(){closeDfeModal();showToast('💡 Click the 🗑️ on each item to remove it','warn');}
+
+function selectDfeIco(ico, el){
+  cDfeIco=ico;
+  document.querySelectorAll('.dfe-ico-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function setDfeFreq(f){
+  cDfeFreq=f;
+  ['daily','weekday','weekend','custom'].forEach(x=>{
+    document.getElementById(`ft-${x}`).className='ftb';
+  });
+  document.getElementById(`ft-${f}`).classList.add('af');
+  document.getElementById('dfe-custom-days-wrap').style.display=f==='custom'?'flex':'none';
+  updateDfePreview();
+}
+function getDfeMonthlyDays(freq, customDays){
+  if(freq==='daily') return 30;
+  if(freq==='weekday') return 22;
+  if(freq==='weekend') return 8;
+  if(freq==='custom') return Math.round((customDays.length/7)*30);
+  return 30;
+}
+function updateDfePreview(){
+  const price=parseFloat(document.getElementById('dfe-price').value)||0;
+  const customDays=[];
+  if(cDfeFreq==='custom'){[0,1,2,3,4,5,6].forEach(i=>{if(document.getElementById(`dcd-${i}`).checked)customDays.push(i);});}
+  const days=getDfeMonthlyDays(cDfeFreq, customDays);
+  const monthly=price*days;
+  document.getElementById('dfe-monthly-preview').textContent=`Est. ₹${monthly.toLocaleString('en-IN')}/month (${days} days)`;
+}
+function submitDfeItem(){
+  const customIco=document.getElementById('dfe-custom-ico').value.trim();
+  const ico=customIco||cDfeIco;
+  const name=document.getElementById('dfe-name').value.trim();
+  const price=parseFloat(document.getElementById('dfe-price').value);
+  if(!name){showToast('⚠️ Item name required','warn');return;}
+  if(!price||price<=0){showToast('⚠️ Valid price required','warn');return;}
+  const customDays=[];
+  if(cDfeFreq==='custom'){[0,1,2,3,4,5,6].forEach(i=>{if(document.getElementById(`dcd-${i}`).checked)customDays.push(i);});}
+  const item={
+    id:Date.now(), icon:ico, name, price,
+    freq:cDfeFreq,
+    customDays, // array of day indices (0=Sun)
+    note:document.getElementById('dfe-note').value.trim(),
+    paidDates:[], // array of 'YYYY-MM-DD' strings
+    color:DFE_COLORS[dfeItems.length%DFE_COLORS.length],
+    createdAt:new Date().toISOString()
+  };
+  dfeItems.unshift(item);
+  saveDfeItems();
+  closeDfeModal();
+  renderDfe();
+  showToast(`✅ "${name}" added to daily expenses!`,'ok');
+}
+const DFE_COLORS=['var(--gold)','var(--accent2)','var(--blue)','var(--purple)','var(--orange)','var(--green)','var(--red)','var(--accent)'];
+
+function dfeIsActiveToday(item){
+  const dow=new Date().getDay(); // 0=Sun
+  if(item.freq==='daily') return true;
+  if(item.freq==='weekday') return dow>=1&&dow<=5;
+  if(item.freq==='weekend') return dow===0||dow===6;
+  if(item.freq==='custom') return item.customDays.includes(dow);
+  return true;
+}
+function dfeIsPaidToday(item){
+  const today=new Date().toISOString().split('T')[0];
+  return item.paidDates.includes(today);
+}
+function markDfePaid(id){
+  const item=dfeItems.find(i=>i.id===id); if(!item)return;
+  const today=new Date().toISOString().split('T')[0];
+  if(dfeIsPaidToday(item)){
+    item.paidDates=item.paidDates.filter(d=>d!==today);
+    showToast('↩️ Unmarked','warn');
+  } else {
+    item.paidDates.push(today);
+    showToast(`✅ "${item.name}" marked as paid!`,'ok');
+  }
+  saveDfeItems();
+  renderDfe();
+}
+function delDfeItem(id){
+  dfeItems=dfeItems.filter(i=>i.id!==id);
+  saveDfeItems(); renderDfe();
+  showToast('🗑️ Item removed','warn');
+}
+function dfeQuickAddToEntries(id){
+  const item=dfeItems.find(i=>i.id===id); if(!item)return;
+  const entry={id:Date.now(),desc:item.name,amount:item.price,type:'expense',pay:'cash',category:'Food & Dining',date:new Date().toISOString().split('T')[0],note:item.note||'Daily fixed expense'};
+  entries.unshift(entry);saveEntries();render();
+  showToast(`➕ "${item.name}" added to entries!`,'ok');
+}
+
+const FREQ_LABELS={daily:'Every day',weekday:'Weekdays only',weekend:'Weekends only',custom:'Custom days'};
+
+function renderDfe(){
+  const grid=document.getElementById('dfe-grid');
+  const log=document.getElementById('dfe-log');
+  const today=new Date().toISOString().split('T')[0];
+
+  const activeItems=dfeItems.filter(dfeIsActiveToday);
+  const paidItems=activeItems.filter(dfeIsPaidToday);
+  const totalDailyActive=activeItems.reduce((s,i)=>s+i.price,0);
+  const totalMonthly=dfeItems.reduce((s,i)=>s+i.price*getDfeMonthlyDays(i.freq,i.customDays),0);
+
+  document.getElementById('dfe-total-day').textContent=fmt(totalDailyActive);
+  document.getElementById('dfe-total-month').textContent=fmt(totalMonthly);
+  document.getElementById('dfe-paid-today').textContent=`${paidItems.length}/${activeItems.length}`;
+  document.getElementById('dfe-item-count').textContent=dfeItems.length;
+  document.getElementById('dfe-log-count').textContent=`${paidItems.length} entries`;
+
+  // Streak bar
+  const days=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const todayDow=new Date().getDay();
+  let streakHtml='';
+  let streakCount=0;
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const dk=d.toISOString().split('T')[0];
+    const dow=d.getDay();
+    const dayItems=dfeItems.filter(item=>dfeIsActiveOnDate(item,dk));
+    const paidThatDay=dayItems.length>0&&dayItems.every(item=>item.paidDates.includes(dk));
+    const isToday=i===0;
+    if(paidThatDay)streakCount++;
+    streakHtml+=`<div class="streak-day ${paidThatDay?'done':''} ${isToday?'today-cell':''}" title="${dk}">${days[dow]}</div>`;
+  }
+  document.getElementById('streak-days').innerHTML=streakHtml;
+  document.getElementById('streak-count').textContent=streakCount;
+
+  if(!dfeItems.length){
+    grid.innerHTML=`<div class="dfe-empty"><div class="dfe-empty-ico">🍱</div><p>No fixed expenses added yet.<br>Click <strong>+ Add Fixed Item</strong> to start tracking.</p></div>`;
+    log.innerHTML=`<div class="empty"><div class="be">🧾</div><p>No items marked today yet.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML=dfeItems.map(item=>{
+    const isPaid=dfeIsPaidToday(item);
+    const isActive=dfeIsActiveToday(item);
+    const monthly=item.price*getDfeMonthlyDays(item.freq,item.customDays);
+    return`<div class="dfe-item${isPaid?' active-today':''}">
+      <div class="dfe-item-stripe" style="background:${item.color}"></div>
+      <div class="dfe-item-head">
+        <span class="dfe-item-icon">${item.icon}</span>
+        <button class="dfe-item-del" onclick="delDfeItem(${item.id})" title="Remove">✕</button>
+      </div>
+      <div class="dfe-item-name" title="${item.name}">${item.name}</div>
+      <div class="dfe-item-price">₹${item.price.toLocaleString('en-IN')}<span style="font-size:9px;color:var(--muted);font-weight:400">/day</span></div>
+      <div class="dfe-item-freq">${FREQ_LABELS[item.freq]||item.freq}</div>
+      <div class="dfe-item-monthly" style="color:${item.color}">~₹${monthly.toLocaleString('en-IN')}/month</div>
+      ${item.note?`<div style="font-size:10px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📝 ${item.note}</div>`:''}
+      <div class="dfe-item-actions">
+        ${isActive?`<button class="dfe-mark-btn${isPaid?' marked':''}" onclick="markDfePaid(${item.id})">${isPaid?'✅ Paid':'Mark Paid'}</button>`:`<button class="dfe-mark-btn" style="opacity:0.4;cursor:default">Not active today</button>`}
+        <button class="dfe-add-entry-btn" onclick="dfeQuickAddToEntries(${item.id})" title="Add to entries">+₹</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Today's log
+  if(!paidItems.length){
+    log.innerHTML=`<div class="empty"><div class="be">🧾</div><p>No items marked today yet.</p></div>`;
+  } else {
+    log.innerHTML=paidItems.map(item=>`<div class="dfe-log-item">
+      <span class="dfe-log-ico">${item.icon}</span>
+      <div class="dfe-log-body">
+        <div class="dfe-log-name">${item.name}</div>
+        <div class="dfe-log-meta">${FREQ_LABELS[item.freq]} · <span style="color:${item.color}">${item.note||'Fixed expense'}</span></div>
+      </div>
+      <span class="dfe-log-amt">₹${item.price.toLocaleString('en-IN')}</span>
+      <button class="dfe-item-del" onclick="markDfePaid(${item.id})" title="Unmark">↩</button>
+    </div>`).join('');
+  }
+}
+function dfeIsActiveOnDate(item,dateStr){
+  const d=new Date(dateStr); const dow=d.getDay();
+  if(item.freq==='daily') return true;
+  if(item.freq==='weekday') return dow>=1&&dow<=5;
+  if(item.freq==='weekend') return dow===0||dow===6;
+  if(item.freq==='custom') return item.customDays.includes(dow);
+  return true;
+}
+
+// ══════════════════════════════════════════
+// TOTAL ENTRIES COUNTER (Dashboard)
+// ══════════════════════════════════════════
+function updateTotalEntriesDisplay(){
+  const el=document.getElementById('total-entries-pill');
+  if(el)el.textContent=`📦 ${entries.length} total entries`;
+  // DFE badge on dashboard
+  const badge=document.getElementById('dfe-dash-badge');
+  if(badge&&dfeItems.length>0){
+    const activeItems=dfeItems.filter(dfeIsActiveToday);
+    const paidItems=activeItems.filter(dfeIsPaidToday);
+    badge.style.display='inline-flex';
+    badge.innerHTML=`<span class="dfe-count-badge">🍱 ${paidItems.length}/${activeItems.length} daily paid today</span>`;
+  } else if(badge){badge.style.display='none';}
+}
+
+
+
+// Update entries counter after every render
+
 
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
-applyLangOnLoad();
+renderPrev();
+document.getElementById('login-name').focus();
 updateMonthDisplay();
-// Auto-restore login if user was previously logged in
-const _saved = getSavedUser();
-if(_saved){
-  loginAs(_saved);
-} else {
-  if(document.getElementById('login-fname')) document.getElementById('login-fname').focus();
-}
 </script>
+<!-- ══════════════════ MOBILE BOTTOM NAV ══════════════════ -->
+<nav class="mobile-nav" id="mobile-nav" style="display:none">
+  <div class="mobile-nav-inner">
+    <button class="mnav-item active" id="mn-dashboard" onclick="goPageMobile('dashboard','mn-dashboard')">
+      <div class="mnav-pill"></div>
+      <div class="mnav-item-wrap">
+        <span class="mnav-ico">📊</span>
+        <span class="mnav-label">Dashboard</span>
+      </div>
+    </button>
+    <button class="mnav-item" id="mn-daily" onclick="goPageMobile('daily','mn-daily')">
+      <div class="mnav-pill"></div>
+      <div class="mnav-item-wrap">
+        <span class="mnav-ico">🍱</span>
+        <span class="mnav-label">Daily</span>
+      </div>
+    </button>
+    <button class="mnav-item" id="mn-emi" onclick="goPageMobile('emi','mn-emi')">
+      <div class="mnav-pill"></div>
+      <div class="mnav-item-wrap">
+        <span class="mnav-ico">🏦</span>
+        <span class="mnav-label">EMI</span>
+      </div>
+    </button>
+    <button class="mnav-item" id="mn-tips" onclick="goPageMobile('tips','mn-tips')">
+      <div class="mnav-pill"></div>
+      <div class="mnav-item-wrap">
+        <span class="mnav-ico">💡</span>
+        <span class="mnav-label">Tips</span>
+      </div>
+    </button>
+    <button class="mnav-item" id="mn-invest" onclick="goPageMobile('invest','mn-invest')">
+      <div class="mnav-pill"></div>
+      <div class="mnav-item-wrap">
+        <span class="mnav-ico">📈</span>
+        <span class="mnav-label">Invest</span>
+      </div>
+    </button>
+  </div>
+</nav>
+
 </body>
 </html>
